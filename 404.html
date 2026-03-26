@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 - Orcrist Holding</title>
+  <style>
+    :root {
+      --bg: #05050A;
+      --gold: #C9A84C;
+      --ivory: #F5F2EB;
+      --ivory3: rgba(245, 242, 235, 0.3);
+      --border: rgba(245, 242, 235, 0.08);
+      --font-site: "Times New Roman", Times, serif;
+    }
+    * { box-sizing: border-box; }
+    html { font-family: var(--font-site); }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ivory);
+      font-family: var(--font-site);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+    }
+    h1 {
+      font-family: "Times New Roman", Times, serif;
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 400;
+      margin: 0 0 0.5rem;
+      color: var(--gold);
+    }
+    p {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--ivory3);
+      margin: 0 0 2rem;
+    }
+    a {
+      display: inline-block;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.75rem 1.5rem;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    a::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: -1;
+    }
+    a:hover, a:focus-visible {
+      color: var(--bg);
+    }
+    a:hover::before, a:focus-visible::before {
+      transform: translateX(0);
+    }
+    a:focus-visible {
+      outline: 1px solid var(--gold);
+      outline-offset: 3px;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <h1 aria-label="404">404</h1>
+    <p>This page is not part of the Orcrist structure. The route you requested does not exist or has moved.</p>
+    <a href="index.html">Back to home</a>
+  </div>
+  <script>
+(function () {
+  var canvas = document.getElementById("particle-canvas");
+  var ctx = canvas.getContext("2d");
+  var W, H, particles = [];
+  function hash(x, y, s) {
+    var n = Math.sin(x * 12.9898 + y * 78.233 + s) * 43758.5453;
+    return n - Math.floor(n);
+  }
+  function resize() {
+    W = innerWidth;
+    H = innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    var n = Math.min(120, Math.floor(W * H / 8000));
+    particles = [];
+    for (var i = 0; i < n; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        seed: Math.random() * 500
+      });
+    }
+  }
+  var mx = W / 2, my = H / 2;
+  document.addEventListener("mousemove", function (e) {
+    mx = e.clientX;
+    my = e.clientY;
+  });
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    var i, j, p, dx, dy, d;
+    for (i = 0; i < particles.length; i++) {
+      p = particles[i];
+      p.vx += (hash(p.x * 0.01, p.y * 0.01, p.seed) - 0.5) * 0.06;
+      p.vy += (hash(p.x * 0.01 + 3, p.y * 0.01 + 3, p.seed) - 0.5) * 0.06;
+      dx = p.x - mx;
+      dy = p.y - my;
+      d = dx * dx + dy * dy;
+      if (d < 180 * 180 && d > 1) {
+        var f = 6000 / d;
+        p.vx += (dx / Math.sqrt(d)) * f * 0.02;
+        p.vy += (dy / Math.sqrt(d)) * f * 0.02;
+      }
+      p.vx *= 0.98;
+      p.vy *= 0.98;
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x += W;
+      if (p.x > W) p.x -= W;
+      if (p.y < 0) p.y += H;
+      if (p.y > H) p.y -= H;
+    }
+    for (i = 0; i < particles.length; i++) {
+      for (j = i + 1; j < particles.length; j++) {
+        dx = particles[i].x - particles[j].x;
+        dy = particles[i].y - particles[j].y;
+        d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 90) {
+          ctx.strokeStyle = "rgba(201,168,76," + (0.12 * (1 - d / 90)) + ")";
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for (i = 0; i < particles.length; i++) {
+      p = particles[i];
+      ctx.fillStyle = "rgba(201,168,76,0.45)";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.1, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  window.addEventListener("resize", resize);
+  resize();
+  frame();
+})();
+  </script>
+</body>
+</html>

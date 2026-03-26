@@ -1,0 +1,2876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orcrist Holding - Paris · Multi-sector holding</title>
+  <meta name="description" content="Orcrist Holding - Building lasting value across industries. Paris-based multi-sector SAS." />
+  <style>
+    :root {
+      --bg: #05050A;
+      --surface1: #0C0C14;
+      --surface2: #12121E;
+      --gold: #C9A84C;
+      --gold2: #E8C96A;
+      --ivory: #F5F2EB;
+      --ivory2: rgba(245, 242, 235, 0.65);
+      --ivory3: rgba(245, 242, 235, 0.3);
+      --border: rgba(245, 242, 235, 0.08);
+      --border-gold: rgba(201, 168, 76, 0.2);
+      --ink2: #12121E;
+      --teal: #14B8A6;
+      --purple: #8B5CF6;
+      --blue: #3B82F6;
+      --green: #22C55E;
+      --pink: #EC4899;
+      --fund: #7C3AED;
+      --spv: #F59E0B;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --t-fast: 0.3s;
+      --t-med: 0.4s;
+      --t-slow: 0.8s;
+      --z-canvas: 0;
+      --z-main: 1;
+      --z-nav: 1000;
+      --z-float: 4000;
+      --z-modal: 5000;
+      --z-ring: 9999;
+      --z-dot: 10000;
+      --z-gate: 99999;
+      --font-site: "Times New Roman", Times, serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html {
+      scroll-behavior: smooth;
+      font-family: var(--font-site);
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ivory2);
+      font-family: var(--font-site);
+      font-size: 14px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    body.pointer-fine { cursor: none; }
+    a { color: inherit; text-decoration: none; }
+    button,
+    input,
+    textarea,
+    select,
+    optgroup {
+      font-family: var(--font-site);
+    }
+    img, svg { display: block; max-width: 100%; }
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0);
+      white-space: nowrap; border: 0;
+    }
+    #particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-canvas);
+      pointer-events: none;
+    }
+    .cursor-dot {
+      position: fixed;
+      width: 7px; height: 7px;
+      background: var(--gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: var(--z-dot);
+      transform: translate(-50%, -50%);
+      left: 0; top: 0;
+      display: none;
+    }
+    body.pointer-fine .cursor-dot { display: block; }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--border-gold);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: var(--z-ring);
+      transform: translate(-50%, -50%);
+      left: 0; top: 0;
+      transition: width 0.2s var(--ease-out), height 0.2s var(--ease-out);
+      display: none;
+    }
+    body.pointer-fine .cursor-ring { display: block; }
+    .cursor-ring.expanded { width: 56px; height: 56px; }
+    #loading-gate {
+      position: fixed;
+      inset: 0;
+      z-index: var(--z-gate);
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s var(--ease-out), visibility 0.6s;
+    }
+    #loading-gate.done { opacity: 0; visibility: hidden; pointer-events: none; }
+    #loading-gate .gate-progress {
+      position: absolute;
+      bottom: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--gold));
+      width: 0%;
+      transition: width 2.4s linear;
+    }
+    #loading-gate.start .gate-progress { width: 100%; }
+    .gate-sub {
+      margin-top: 1.5rem;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      opacity: 0;
+      transition: opacity 0.8s 0.4s;
+    }
+    #loading-gate.start .gate-sub { opacity: 1; }
+    .gate-logo-svg { width: min(420px, 88vw); height: auto; }
+    .gate-logo-svg text {
+      fill: none;
+      stroke: var(--gold);
+      stroke-width: 1.2;
+      font-family: var(--font-site);
+      font-size: 72px;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+    }
+    header.nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: var(--z-nav);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      border-bottom: 1px solid transparent;
+      transition: background var(--t-med), backdrop-filter var(--t-med), border-color var(--t-med);
+    }
+    header.nav.scrolled {
+      background: rgba(5, 5, 10, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom-color: var(--border);
+    }
+    .nav-brand {
+      font-family: var(--font-site);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--ivory);
+      letter-spacing: 0.08em;
+    }
+    .nav-brand .dot { color: var(--gold); }
+    .nav-center {
+      display: flex;
+      gap: 0.65rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nav-center a {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(201, 168, 76, 0.22);
+      background: rgba(5, 5, 10, 0.45);
+      box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.04) inset;
+      text-decoration: none;
+      transition: color 0.35s ease, letter-spacing 0.35s ease,
+        text-shadow 0.4s ease,
+        border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    }
+    .nav-center a:hover,
+    .nav-center a:focus-visible {
+      color: var(--ivory);
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 18px rgba(201, 168, 76, 0.22);
+      border-color: rgba(201, 168, 76, 0.48);
+      background: rgba(201, 168, 76, 0.07);
+      box-shadow: 0 0 22px rgba(201, 168, 76, 0.1), 0 0 0 1px rgba(201, 168, 76, 0.06) inset;
+    }
+    .nav-center a.nav-link-featured:hover,
+    .nav-center a.nav-link-featured:focus-visible {
+      letter-spacing: 0.2em;
+    }
+    .nav-featured-label {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+    }
+    .magnetic-text .mag-char {
+      display: inline-block;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: transform;
+    }
+    .magnetic-text .mag-char-space {
+      min-width: 0.25em;
+    }
+    h1.magnetic-text {
+      display: block;
+    }
+    .hero-title.magnetic-text .mag-char {
+      transition-duration: 0.22s;
+    }
+    .magnetic-text .mag-char-mark {
+      position: relative;
+    }
+    .magnetic-text .mag-char-mark::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 8px rgba(201, 168, 76, 0.85);
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .magnetic-text .mag-char { transition: none; }
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+    .lang-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: stretch;
+      border: 1px solid var(--border-gold);
+      background: rgba(5, 5, 10, 0.65);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      overflow: hidden;
+    }
+    .lang-toggle .lang-pill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(201, 168, 76, 0.22), rgba(201, 168, 76, 0.06));
+      border-right: 1px solid rgba(201, 168, 76, 0.25);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      transform: translateX(0);
+      transition: transform 0.55s cubic-bezier(0.34, 1.2, 0.64, 1);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .lang-toggle.lang-is-fr .lang-pill {
+      transform: translateX(100%);
+      border-right: none;
+      border-left: 1px solid rgba(201, 168, 76, 0.25);
+    }
+    .lang-toggle button {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      min-width: 2.75rem;
+      background: transparent;
+      border: none;
+      color: var(--ivory3);
+      padding: 0.45rem 0.75rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: color 0.35s ease, transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1), text-shadow 0.35s;
+    }
+    .lang-toggle button.active {
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(201, 168, 76, 0.35);
+    }
+    .lang-toggle button:not(.active):hover {
+      color: var(--ivory2);
+    }
+    .lang-toggle button:active {
+      transform: scale(0.96);
+    }
+    .btn-cta {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 0.55rem 1.1rem;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: transparent;
+      font-family: inherit;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .btn-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-101%);
+      transition: transform var(--t-med) var(--ease-out);
+      z-index: -1;
+    }
+    .btn-cta:hover, .btn-cta:focus-visible {
+      color: var(--bg);
+    }
+    .btn-cta:hover::before, .btn-cta:focus-visible::before {
+      transform: translateX(0);
+    }
+    .btn-solid {
+      position: relative;
+      overflow: hidden;
+      border: none;
+      background: var(--gold);
+      color: var(--bg);
+      padding: 0.75rem 1.4rem;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-family: inherit;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .btn-solid::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--gold2);
+      transform: translateX(-101%);
+      transition: transform var(--t-med) var(--ease-out);
+      z-index: -1;
+    }
+    .btn-solid:hover::before { transform: translateX(0); }
+    .btn-ghost {
+      border: 1px solid var(--border-gold);
+      background: transparent;
+      color: var(--ivory);
+      padding: 0.75rem 1.4rem;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-family: inherit;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-ghost::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--gold);
+      opacity: 0;
+      transition: opacity var(--t-fast);
+    }
+    .btn-ghost:hover::before { opacity: 1; }
+    main { position: relative; z-index: var(--z-main); }
+    .section-tag {
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .sh {
+      font-family: var(--font-site);
+      font-weight: 400;
+      color: var(--ivory);
+      line-height: 1.15;
+      position: relative;
+      display: inline-block;
+    }
+    .sh::after {
+      content: "";
+      position: absolute;
+      left: -4%;
+      top: 0;
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(201, 168, 76, 0.14), rgba(201, 168, 76, 0.06), transparent);
+      transition: width 0.65s var(--ease-out);
+      pointer-events: none;
+      z-index: -1;
+    }
+    .sh:hover::after {
+      width: 108%;
+    }
+    #main-content.lang-swap-anim {
+      animation: langSwapPulse 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes langSwapPulse {
+      0% { opacity: 1; filter: brightness(1); }
+      35% { opacity: 0.9; filter: brightness(1.14) saturate(1.08); }
+      100% { opacity: 1; filter: brightness(1); }
+    }
+    .rv, .rl, .rr {
+      opacity: 0;
+      transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
+    }
+    .rv { transform: translateY(32px); }
+    .rl { transform: translateX(-40px); }
+    .rr { transform: translateX(40px); }
+    .rv.in-view, .rl.in-view, .rr.in-view {
+      opacity: 1;
+      transform: none;
+    }
+    .d1 { transition-delay: 0.045s; }
+    .d2 { transition-delay: 0.09s; }
+    .d3 { transition-delay: 0.135s; }
+    .d4 { transition-delay: 0.18s; }
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 1.5rem 4rem;
+      position: relative;
+    }
+    .hero-pre {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      margin-bottom: 2rem;
+    }
+    .hero-pre .line {
+      width: 48px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.5;
+    }
+    .hero-title-wrap {
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .hero-title {
+      font-family: var(--font-site);
+      font-size: clamp(3.75rem, 12vw, 8.125rem);
+      line-height: 0.95;
+      margin: 0;
+      transform: translateY(100%);
+      animation: heroLine 1s var(--ease-out) forwards;
+    }
+    .hero-title.l2 { animation-delay: 0.12s; color: var(--gold); font-style: italic; font-weight: 400; }
+    .hero-title.l3 { animation-delay: 0.24s; }
+    @keyframes heroLine {
+      to { transform: translateY(0); }
+    }
+    .hero-body {
+      max-width: 500px;
+      font-size: 12px;
+      color: var(--ivory2);
+      margin: 2rem auto 2rem;
+      line-height: 1.8;
+    }
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+    }
+    .scroll-hint {
+      margin-top: 4rem;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+    }
+    .scroll-drip {
+      width: 1px;
+      height: 40px;
+      margin: 0.75rem auto 0;
+      background: linear-gradient(var(--gold), transparent);
+      animation: drip 2s ease-in-out infinite;
+    }
+    @keyframes drip {
+      0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+    .ticker-wrap {
+      background: var(--ink2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 0.85rem 0;
+    }
+    .ticker {
+      display: flex;
+      width: max-content;
+      animation: tick 48s linear infinite;
+    }
+    .ticker-wrap:hover .ticker { animation-play-state: paused; }
+    @keyframes tick {
+      to { transform: translateX(-50%); }
+    }
+    .ticker span {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      white-space: nowrap;
+      padding: 0 2rem;
+    }
+    .ticker .dot { color: var(--gold); margin-right: 0.5rem; }
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat-cell {
+      padding: 2.5rem 1rem;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      position: relative;
+      transition: box-shadow var(--t-fast);
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell:hover {
+      box-shadow: inset 0 0 80px rgba(201, 168, 76, 0.08);
+    }
+    .stat-num {
+      font-family: var(--font-site);
+      font-size: 58px;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      margin-top: 0.5rem;
+    }
+    section {
+      padding: 5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .about-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .value-list { list-style: none; padding: 0; margin: 2rem 0 0; }
+    .value-list li {
+      border: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      margin-bottom: -1px;
+      font-size: 13px;
+      transition: color var(--t-fast);
+    }
+    .value-list li:hover { color: var(--gold); }
+    .value-list .num { color: var(--ivory3); margin-right: 0.5rem; font-style: italic; }
+    .quote-box {
+      background: var(--surface1);
+      padding: 2.5rem;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.1s linear;
+      border: 1px solid var(--border);
+    }
+    .quote-box::before {
+      content: "“";
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      font-family: var(--font-site);
+      font-size: 120px;
+      line-height: 1;
+      color: var(--ivory);
+      opacity: 0.1;
+      pointer-events: none;
+    }
+    .quote-box .q-top {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: -2.5rem -2.5rem 2rem;
+      width: calc(100% + 5rem);
+    }
+    .quote-corner-tl, .quote-corner-br {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-color: var(--gold);
+      border-style: solid;
+      pointer-events: none;
+    }
+    .quote-corner-tl { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+    .quote-corner-br { bottom: 12px; right: 12px; border-width: 0 1px 1px 0; }
+    .quote-box p {
+      font-family: var(--font-site);
+      font-size: 1.35rem;
+      font-style: italic;
+      color: var(--ivory2);
+      line-height: 1.5;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .verticals-grid {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+    .vc {
+      background: var(--surface1);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1.25rem 1.75rem;
+      cursor: pointer;
+      position: relative;
+      transition: background var(--t-fast), transform var(--t-fast);
+      text-align: left;
+    }
+    .vc:hover { background: var(--surface2); }
+    .vc-top {
+      height: 2px;
+      width: 0%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transition: width var(--t-med) var(--ease-out);
+    }
+    .vc:hover .vc-top { width: 100%; }
+    .vc-num {
+      font-family: var(--font-site);
+      font-style: italic;
+      color: var(--ivory3);
+      font-size: 13px;
+      margin-bottom: 0.5rem;
+    }
+    .vc h3 {
+      font-family: var(--font-site);
+      font-size: 22px;
+      margin: 0 0 0.35rem;
+      color: var(--ivory);
+    }
+    .vc-sector {
+      font-size: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .vc ul {
+      margin: 0;
+      padding-left: 1rem;
+      font-size: 11px;
+      color: var(--ivory2);
+    }
+    .vc li { margin-bottom: 0.35rem; }
+    .pill {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.6rem;
+      border: 1px solid var(--border);
+      color: var(--ivory3);
+    }
+    .vc-hint {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      color: var(--ivory3);
+      text-transform: uppercase;
+    }
+    .structure-wrap { max-width: 1100px; margin: 0 auto; }
+    .graph-shell {
+      position: relative;
+      border: 1px solid var(--border-gold);
+      background: linear-gradient(165deg, rgba(10, 10, 18, 0.98) 0%, var(--surface1) 45%, rgba(6, 6, 12, 0.99) 100%);
+      box-shadow:
+        inset 0 0 100px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(201, 168, 76, 0.08),
+        0 24px 48px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+    }
+    .graph-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201, 168, 76, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 168, 76, 0.04) 1px, transparent 1px);
+      background-size: 56px 56px;
+      mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, black 20%, transparent 72%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 45%, black 20%, transparent 72%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .graph-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(201, 168, 76, 0.06);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .graph-crown-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      padding: 0.85rem 1rem 0.65rem;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+      background: rgba(5, 5, 10, 0.45);
+      position: relative;
+      z-index: 3;
+    }
+    .graph-crown-badge {
+      flex-shrink: 0;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(201, 168, 76, 0.4);
+      border-radius: 2px;
+      background: rgba(5, 5, 10, 0.85);
+      box-shadow: 0 0 20px rgba(201, 168, 76, 0.1);
+      color: var(--gold);
+      cursor: default;
+    }
+    .graph-crown-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      line-height: 0;
+      font-size: 19px;
+      transform: translateY(-0.5px);
+    }
+    .graph-crown-caption {
+      margin: 0;
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+    }
+    .graph-box {
+      height: 520px;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+    .graph-box svg#force-svg {
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+      display: block;
+      position: relative;
+      z-index: 1;
+      shape-rendering: geometricPrecision;
+      text-rendering: geometricPrecision;
+      -webkit-font-smoothing: antialiased;
+    }
+    .graph-box svg#force-svg:active { cursor: grabbing; }
+    .graph-box svg#force-svg .graph-links path {
+      fill: none;
+      transition: stroke 0.18s ease, opacity 0.18s ease, stroke-width 0.18s ease;
+    }
+    .graph-box svg#force-svg .graph-nodes .node-circle {
+      vector-effect: non-scaling-stroke;
+    }
+    .graph-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.75rem;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem 1.25rem 0;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+      background: rgba(5, 5, 10, 0.35);
+    }
+    .graph-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .graph-legend i {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .graph-legend i.lg-gold {
+      background: radial-gradient(circle at 30% 30%, #E8C96A, #8B6914);
+      box-shadow: 0 0 10px rgba(201, 168, 76, 0.45);
+    }
+    .graph-legend i.lg-blue { background: linear-gradient(135deg, #3B82F6, #1D4ED8); }
+    .graph-legend i.lg-amber { background: linear-gradient(135deg, #F59E0B, #B45309); }
+    .graph-legend i.lg-fund { background: linear-gradient(135deg, #7C3AED, #4C1D95); }
+    .graph-legend i.lg-line {
+      width: 20px;
+      height: 2px;
+      border-radius: 0;
+      background: repeating-linear-gradient(90deg, var(--gold), var(--gold) 3px, transparent 3px, transparent 6px);
+      opacity: 0.7;
+    }
+    .orcrist-graph-tip {
+      position: fixed;
+      z-index: 6000;
+      pointer-events: none;
+      max-width: 300px;
+      padding: 14px 18px 16px;
+      background: rgba(10, 10, 18, 0.96);
+      border: 1px solid rgba(201, 168, 76, 0.38);
+      box-shadow:
+        0 16px 48px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      font-family: var(--font-site);
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--ivory2);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .orcrist-graph-tip.visible { opacity: 1; }
+    .orcrist-graph-tip .tip-kicker {
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+    .orcrist-graph-tip .tip-title {
+      font-size: 15px;
+      color: var(--ivory);
+      margin: 0 0 8px;
+      font-weight: 400;
+    }
+    .orcrist-graph-tip .tip-desc {
+      margin: 0;
+      color: var(--ivory3);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+    @keyframes pulse-ring-kf {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.12; }
+    }
+    .graph-box svg .pulse-ring {
+      animation: pulse-ring-kf 3s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .graph-hint {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--ivory3);
+      margin-top: 1rem;
+      text-transform: uppercase;
+    }
+    .crown-tilt {
+      display: inline-block;
+      transform-style: preserve-3d;
+      transition: transform 0.1s linear;
+    }
+    .spv-pe-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 3rem;
+      max-width: 1100px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .spv-block, .pe-block {
+      background: var(--surface1);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+    .spv-block h4, .pe-block h4 {
+      font-family: var(--font-site);
+      font-size: 1.25rem;
+      margin: 0 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .diamond-icon {
+      width: 12px; height: 12px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+    .hex-icon {
+      width: 14px; height: 14px;
+      background: var(--fund);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+    .spv-list { list-style: none; padding: 0; margin: 0; font-size: 12px; color: var(--ivory2); }
+    .spv-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+    .pe-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .pe-metric {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: center;
+      font-size: 11px;
+    }
+    .pe-metric strong { display: block; color: var(--gold); font-size: 1.1rem; font-family: var(--font-site); }
+    #invest { padding: 0; border: none; }
+    #calc, #qualifier { padding: 5rem 2rem; border-bottom: 1px solid var(--border); }
+    .calc-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .slider-row { margin-bottom: 1.75rem; }
+    .slider-row label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      margin-bottom: 0.5rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 0;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px; height: 14px;
+      background: var(--gold);
+      border-radius: 0;
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 14px; height: 14px;
+      background: var(--gold);
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+    }
+    .result-box {
+      background: var(--surface1);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      position: relative;
+    }
+    .result-box::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .net-big {
+      font-family: var(--font-site);
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      color: var(--gold);
+      margin: 0 0 0.25rem;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .result-cell {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      font-size: 11px;
+    }
+    .result-cell span { display: block; color: var(--ivory3); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.25rem; }
+    .quiz-box {
+      max-width: 720px;
+      margin: 0 auto;
+      background: var(--surface1);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      position: relative;
+    }
+    .quiz-box::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .quiz-step { display: none; }
+    .quiz-step.active { display: block; animation: fadeIn 0.45s var(--ease-out); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    .quiz-q { font-family: var(--font-site); font-size: 1.35rem; margin-bottom: 1.5rem; color: var(--ivory); }
+    .quiz-options { display: flex; flex-direction: column; gap: 0.65rem; }
+    .quiz-opt {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--ivory2);
+      padding: 1rem 1.25rem;
+      text-align: left;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      clip-path: inset(0);
+    }
+    .quiz-opt::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(201, 168, 76, 0.12);
+      transform: translateX(-101%);
+      transition: transform var(--t-med) var(--ease-out);
+      z-index: 0;
+    }
+    .quiz-opt:hover::before, .quiz-opt:focus-visible::before { transform: translateX(0); }
+    .quiz-opt span { position: relative; z-index: 1; }
+    .quiz-nav { margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; }
+    .quiz-back {
+      background: none;
+      border: none;
+      color: var(--ivory3);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .quiz-back:hover { color: var(--gold); }
+    .philosophy-section { text-align: center; padding: 6rem 1.5rem; }
+    .phil-quote {
+      font-family: var(--font-site);
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-style: italic;
+      color: var(--ivory);
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      position: relative;
+    }
+    .phil-quote::before {
+      content: "“";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 180px;
+      color: var(--ivory);
+      opacity: 0.07;
+      pointer-events: none;
+      line-height: 1;
+    }
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .pillar {
+      position: relative;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .pillar .ghost-num {
+      position: absolute;
+      top: -0.5rem;
+      left: 0;
+      font-family: var(--font-site);
+      font-size: 56px;
+      color: var(--ivory);
+      opacity: 0.1;
+      line-height: 1;
+    }
+    .pillar h4 {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      margin: 0 0 0.75rem;
+    }
+    .pillar p { font-size: 11px; color: var(--ivory2); margin: 0; line-height: 1.7; }
+    .contact-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+    .contact-info p { margin: 0.5rem 0; font-size: 13px; }
+    .contact-info a {
+      color: var(--gold);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.35s ease, text-shadow 0.45s ease, letter-spacing 0.4s ease, padding-bottom 0.25s ease;
+      letter-spacing: 0.04em;
+    }
+    .contact-info a:hover,
+    .contact-info a:focus-visible {
+      border-bottom-color: var(--gold2);
+      text-shadow: 0 0 18px rgba(201, 168, 76, 0.45);
+      letter-spacing: 0.1em;
+    }
+    .contact-form label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      margin-bottom: 0.35rem;
+    }
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--ivory);
+      padding: 0.65rem 0;
+      font-family: inherit;
+      font-size: 14px;
+      margin-bottom: 1.25rem;
+      transition: border-color var(--t-fast);
+    }
+    .contact-form input:focus, .contact-form textarea:focus {
+      outline: none;
+      border-bottom-color: var(--gold);
+    }
+    .site-footer {
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      color: var(--ivory3);
+    }
+    .site-footer nav { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+    .site-footer nav a {
+      position: relative;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--ivory3);
+      transition: color 0.35s ease, letter-spacing 0.45s ease, text-shadow 0.4s ease;
+    }
+    .site-footer nav a::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -2px;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.4s var(--ease-out), left 0.4s var(--ease-out);
+    }
+    .site-footer nav a:hover,
+    .site-footer nav a:focus-visible {
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 16px rgba(201, 168, 76, 0.25);
+    }
+    .site-footer nav a:hover::after,
+    .site-footer nav a:focus-visible::after {
+      width: 100%;
+      left: 0;
+    }
+    .site-footer .copy { text-align: right; }
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 5, 10, 0.88);
+      backdrop-filter: blur(12px);
+      z-index: var(--z-modal);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--t-med), visibility var(--t-med);
+    }
+    .modal-overlay.open { opacity: 1; visibility: visible; }
+    .modal-panel {
+      position: absolute;
+      inset: 0;
+      background: var(--surface1);
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .modal-overlay.open .modal-panel { transform: translateY(0); }
+    .modal-inner { max-width: 720px; margin: 0 auto; padding: 4rem 2rem 3rem; position: relative; }
+    .modal-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--ivory);
+      font-size: 1.25rem;
+      cursor: pointer;
+      z-index: 2;
+      font-family: inherit;
+    }
+    .modal-close:hover { border-color: var(--gold); color: var(--gold); }
+    .modal-tag { font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+    .modal-title { font-family: var(--font-site); font-size: clamp(2rem, 5vw, 2.75rem); margin: 0 0 0.5rem; }
+    .modal-loc { font-size: 11px; color: var(--ivory3); margin-bottom: 1.5rem; }
+    .modal-div { height: 1px; background: var(--border); margin-bottom: 1.5rem; }
+    .modal-body { font-size: 14px; line-height: 1.75; color: var(--ivory2); margin-bottom: 2rem; }
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .modal-stats .ms {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      font-size: 10px;
+    }
+    .modal-stats .ms b { display: block; color: var(--ivory); font-size: 12px; margin-bottom: 0.25rem; }
+    .float-cta {
+      position: fixed;
+      z-index: var(--z-float);
+      bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      transform: translateY(120%);
+      transition: transform 0.55s var(--ease-out);
+    }
+    .float-cta.visible { transform: translateY(0); }
+    .float-deck { right: 1.5rem; }
+    .float-wa { left: 1.5rem; align-items: flex-start; transition-delay: 0.1s; }
+    .float-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface1);
+      border: 1px solid var(--border-gold);
+      color: var(--ivory);
+      padding: 0.65rem 1rem;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .float-panel {
+      background: var(--surface2);
+      border: 1px solid var(--border-gold);
+      padding: 1rem;
+      width: 260px;
+      display: none;
+    }
+    .float-panel.open { display: block; }
+    .float-panel input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--ivory);
+      padding: 0.5rem 0;
+      margin-bottom: 0.75rem;
+      font-family: inherit;
+    }
+    .float-panel input:focus { outline: none; border-color: var(--gold); }
+    .wa-btn {
+      border-color: rgba(74, 222, 128, 0.35);
+      color: var(--ivory2);
+    }
+    .wa-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: waPulse 2s ease-in-out infinite;
+    }
+    @keyframes waPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+      50% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+    }
+    .nav-toggle {
+      display: none;
+      background: transparent;
+      border: 1px solid var(--border-gold);
+      color: var(--ivory);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.5rem 0.85rem;
+      font-family: inherit;
+      cursor: pointer;
+      grid-column: 2;
+      justify-self: center;
+    }
+    .nav-mobile {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(5, 5, 10, 0.97);
+      z-index: 900;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ivory3);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(201, 168, 76, 0.22);
+      background: rgba(5, 5, 10, 0.5);
+      box-shadow: 0 0 0 1px rgba(201, 168, 76, 0.04) inset;
+      text-decoration: none;
+      transition: color 0.35s ease, letter-spacing 0.35s ease,
+        text-shadow 0.4s ease, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+    }
+    .nav-mobile a:hover,
+    .nav-mobile a:focus-visible {
+      color: var(--ivory);
+      letter-spacing: 0.22em;
+      text-shadow: 0 0 18px rgba(201, 168, 76, 0.22);
+      border-color: rgba(201, 168, 76, 0.48);
+      background: rgba(201, 168, 76, 0.08);
+      box-shadow: 0 0 22px rgba(201, 168, 76, 0.1), 0 0 0 1px rgba(201, 168, 76, 0.06) inset;
+    }
+    .nav-mobile-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--ivory);
+      width: 44px;
+      height: 44px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    a:focus-visible, button:focus-visible, .vc:focus-visible, .quiz-opt:focus-visible {
+      outline: 1px solid var(--gold);
+      outline-offset: 3px;
+    }
+    @media (max-width: 1100px) {
+      .nav-center { display: none; }
+      .nav-toggle { display: block; }
+      .verticals-grid { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; }
+      .calc-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .spv-pe-grid { grid-template-columns: 1fr; }
+      .pillars { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .stat-cell:nth-child(2) { border-right: none; }
+      .stat-cell:nth-child(3), .stat-cell:nth-child(4) { border-top: 1px solid var(--border); }
+    }
+    @media (max-width: 600px) {
+      .verticals-grid { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .modal-stats { grid-template-columns: repeat(2, 1fr); }
+      .result-grid { grid-template-columns: 1fr; }
+      .pe-metrics { grid-template-columns: 1fr; }
+      .site-footer { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
+      .site-footer .copy { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+
+  <div id="loading-gate" role="status" aria-live="polite">
+    <svg class="gate-logo-svg" viewBox="0 0 520 100" aria-label="Orcrist">
+      <text x="50%" y="62" text-anchor="middle" id="gate-stroke-text">ORCRIST</text>
+    </svg>
+    <p class="gate-sub" data-en="Paris · Multi-sector holding" data-fr="Paris · Holding multi-secteur"></p>
+    <div class="gate-progress" aria-hidden="true"></div>
+  </div>
+
+  <header class="nav" id="site-nav">
+    <a class="nav-brand" href="#hero">ORCRIST<span class="dot">.</span></a>
+    <nav class="nav-center" aria-label="Primary">
+      <a href="#about" data-en="About" data-fr="À propos">About</a>
+      <a href="#verticals" data-en="Verticals" data-fr="Filiales">Verticals</a>
+      <a href="#structure" class="nav-link-featured" id="nav-structure-ux" aria-label="Structure">
+        <span class="nav-featured-label magnetic-text" data-magnetic-mark="3" data-en="Structure" data-fr="Structure">Structure</span>
+      </a>
+      <a href="#invest" data-en="Invest" data-fr="Investir">Invest</a>
+      <a href="#contact" data-en="Contact" data-fr="Contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <div class="lang-toggle" id="lang-toggle" role="group" aria-label="Language">
+        <span class="lang-pill" aria-hidden="true"></span>
+        <button type="button" id="lang-en" class="active" aria-pressed="true">EN</button>
+        <button type="button" id="lang-fr" aria-pressed="false">FR</button>
+      </div>
+      <a href="#contact" class="btn-cta" data-en="Get in touch" data-fr="Contactez-nous">Get in touch</a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile" data-en="Menu" data-fr="Menu">Menu</button>
+    </div>
+  </header>
+
+  <div class="nav-mobile" id="nav-mobile" aria-hidden="true" role="dialog" aria-label="Menu">
+    <button type="button" class="nav-mobile-close" id="nav-mobile-close" aria-label="Close menu">×</button>
+    <a href="#about" data-en="About" data-fr="À propos">About</a>
+    <a href="#verticals" data-en="Verticals" data-fr="Filiales">Verticals</a>
+    <a href="#structure" data-en="Structure" data-fr="Structure">Structure</a>
+    <a href="#invest" data-en="Invest" data-fr="Investir">Invest</a>
+    <a href="#contact" data-en="Contact" data-fr="Contact">Contact</a>
+  </div>
+
+  <main id="main-content">
+    <section id="hero">
+      <p class="hero-pre">
+        <span class="line" aria-hidden="true"></span>
+        <span data-en="Paris · Est. 2024 · Multi-sector holding" data-fr="Paris · Fondée en 2024 · Holding multi-secteur">Paris · Est. 2024 · Multi-sector holding</span>
+        <span class="line" aria-hidden="true"></span>
+      </p>
+      <div class="hero-title-wrap"><h1 class="hero-title l1 magnetic-text" data-magnetic-strength="1.7" data-en="Building" data-fr="Construire">Building</h1></div>
+      <div class="hero-title-wrap"><h1 class="hero-title l2 magnetic-text" data-magnetic-strength="1.7" data-en="Lasting Value" data-fr="Une valeur durable">Lasting Value</h1></div>
+      <div class="hero-title-wrap"><h1 class="hero-title l3 magnetic-text" data-magnetic-strength="1.7" data-en="Across Industries" data-fr="À travers les industries">Across Industries</h1></div>
+      <p class="hero-body" data-en="Orcrist Holding SAS is a Paris-based parent company that coordinates capital, advisory, and operating ventures across finance, real estate, technology, fashion, and administrative services - with a disciplined institutional approach." data-fr="Orcrist Holding SAS est une société mère parisienne qui coordonne capital, conseil et filiales opérationnelles dans la finance, l'immobilier, la technologie, la mode et les services administratifs - avec une approche institutionnelle disciplinée.">Orcrist Holding SAS is a Paris-based parent company that coordinates capital, advisory, and operating ventures across finance, real estate, technology, fashion, and administrative services - with a disciplined institutional approach.</p>
+      <div class="hero-ctas">
+        <a href="#verticals" class="btn-solid" data-en="Our verticals" data-fr="Nos filiales">Our verticals</a>
+        <a href="#invest" class="btn-ghost" data-en="Investment arm" data-fr="Branche investissement">Investment arm</a>
+      </div>
+      <div class="scroll-hint" data-en="Scroll" data-fr="Défiler">Scroll</div>
+      <div class="scroll-drip" aria-hidden="true"></div>
+    </section>
+
+    <div class="ticker-wrap" aria-hidden="true">
+      <div class="ticker" id="ticker-dup">
+        <span><span class="dot">●</span> Orcrist Capital · Finance &amp; investment</span>
+        <span><span class="dot">●</span> Orcrist Conseil · Advisory &amp; compliance</span>
+        <span><span class="dot">●</span> Orcrist Estates · Real estate</span>
+        <span><span class="dot">●</span> Orcrist Labs · Technology</span>
+        <span><span class="dot">●</span> Orcrist Maison · Fashion</span>
+        <span><span class="dot">●</span> Orcrist Capital Fund · 2% / 20% · 8% hurdle</span>
+        <span><span class="dot">●</span> Orcrist SPV Co. · Ring-fenced vehicles</span>
+      </div>
+    </div>
+
+    <section class="stats-bar" id="stats" aria-label="Stats">
+      <div class="stat-cell rv">
+        <div class="stat-num" data-target="5">0</div>
+        <div class="stat-label" data-en="Verticals" data-fr="Filiales">Verticals</div>
+      </div>
+      <div class="stat-cell rv d1">
+        <div class="stat-num" data-target="6">0</div>
+        <div class="stat-label" data-en="Active ventures" data-fr="Projets actifs">Active ventures</div>
+      </div>
+      <div class="stat-cell rv d2">
+        <div class="stat-num">FR</div>
+        <div class="stat-label" data-en="Paris-based" data-fr="Basé à Paris">Paris-based</div>
+      </div>
+      <div class="stat-cell rv d3">
+        <div class="stat-num">∞</div>
+        <div class="stat-label" data-en="Ambition" data-fr="Ambition">Ambition</div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="about-grid">
+        <div class="rl">
+          <p class="section-tag" data-en="About" data-fr="À propos">About</p>
+          <h2 class="sh magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem)" data-en="One holding. Five engines." data-fr="Une holding. Cinq moteurs.">One holding. Five engines.</h2>
+          <p data-en="We allocate capital and governance across subsidiaries that share a single standard: institutional rigour, long horizons, and operator-led execution. Each vertical is a distinct SAS - ring-fenced where required - unified under Orcrist Holding." data-fr="Nous allouons capital et gouvernance à des filiales partageant un standard unique : rigueur institutionnelle, horizons longs et exécution par des opérateurs. Chaque verticale est une SAS distincte - cloisonnée si nécessaire - unifiée sous Orcrist Holding.">We allocate capital and governance across subsidiaries that share a single standard: institutional rigour, long horizons, and operator-led execution. Each vertical is a distinct SAS - ring-fenced where required - unified under Orcrist Holding.</p>
+          <ul class="value-list">
+            <li><span class="num">I.</span> <span data-en="Conviction over consensus" data-fr="Conviction plutôt que consensus">Conviction over consensus</span></li>
+            <li><span class="num">II.</span> <span data-en="Operators first" data-fr="Les opérateurs d'abord">Operators first</span></li>
+            <li><span class="num">III.</span> <span data-en="Long-term by design" data-fr="Long terme par conception">Long-term by design</span></li>
+          </ul>
+        </div>
+        <div class="rr quote-box" id="quote-tilt" tabindex="0">
+          <div class="q-top" aria-hidden="true"></div>
+          <span class="quote-corner-tl" aria-hidden="true"></span>
+          <span class="quote-corner-br" aria-hidden="true"></span>
+          <p data-en="We do not chase trends. We build the infrastructure that outlasts them." data-fr="Nous ne suivons pas les modes. Nous construisons l'infrastructure qui leur survit.">We do not chase trends. We build the infrastructure that outlasts them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="verticals">
+      <p class="section-tag rv" data-en="Portfolio" data-fr="Portefeuille">Portfolio</p>
+      <h2 class="sh rv magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem);text-align:center;margin-bottom:3rem" data-en="Five verticals." data-fr="Cinq verticales.">Five verticals.</h2>
+      <div class="verticals-grid">
+        <button type="button" class="vc val" data-modal="v1" aria-haspopup="dialog">
+          <span class="vc-top" style="background:var(--blue)"></span>
+          <div class="vc-num">01</div>
+          <h3>Orcrist Capital</h3>
+          <div class="vc-sector" style="color:var(--blue)">Finance &amp; investment</div>
+          <ul>
+            <li data-en="Proprietary trading" data-fr="Trading prop.">Proprietary trading</li>
+            <li data-en="Portfolio management" data-fr="Gestion de portefeuille">Portfolio management</li>
+            <li data-en="Wealth advisory" data-fr="Conseil en gestion de patrimoine">Wealth advisory</li>
+            <li data-en="GP - Orcrist Capital Fund" data-fr="GP - Orcrist Capital Fund">GP - Orcrist Capital Fund</li>
+          </ul>
+          <span class="pill" data-en="Active" data-fr="Actif">Active</span>
+        </button>
+        <button type="button" class="vc val" data-modal="v2">
+          <span class="vc-top" style="background:var(--teal)"></span>
+          <div class="vc-num">02</div>
+          <h3>Orcrist Conseil</h3>
+          <div class="vc-sector" style="color:var(--teal)">Advisory</div>
+          <ul>
+            <li data-en="French admin &amp; visas" data-fr="Administration &amp; visas">French admin &amp; visas</li>
+            <li data-en="Business setup" data-fr="Création d'entreprise">Business setup</li>
+            <li data-en="M&amp;A for SMEs" data-fr="M&amp;A PME">M&amp;A for SMEs</li>
+            <li data-en="Regulatory &amp; compliance" data-fr="Conformité &amp; réglementation">Regulatory &amp; compliance</li>
+          </ul>
+          <span class="pill" data-en="Active" data-fr="Actif">Active</span>
+        </button>
+        <button type="button" class="vc val" data-modal="v3">
+          <span class="vc-top" style="background:var(--green)"></span>
+          <div class="vc-num">03</div>
+          <h3>Orcrist Estates</h3>
+          <div class="vc-sector" style="color:var(--green)">Real estate</div>
+          <ul>
+            <li data-en="Acquisition (SCI)" data-fr="Acquisition (SCI)">Acquisition (SCI)</li>
+            <li data-en="Rental portfolio" data-fr="Patrimoine locatif">Rental portfolio</li>
+            <li data-en="Development" data-fr="Promotion">Development</li>
+            <li data-en="Club deals / SPV" data-fr="Club deals / SPV">Club deals / SPV</li>
+          </ul>
+          <span class="pill" data-en="In progress" data-fr="En cours">In progress</span>
+        </button>
+        <button type="button" class="vc val" data-modal="v4">
+          <span class="vc-top" style="background:var(--purple)"></span>
+          <div class="vc-num">04</div>
+          <h3>Orcrist Labs</h3>
+          <div class="vc-sector" style="color:var(--purple)">Technology</div>
+          <ul>
+            <li data-en="Restaurant tech" data-fr="Tech restauration">Restaurant tech</li>
+            <li data-en="Enterprise AI" data-fr="IA entreprise">Enterprise AI</li>
+            <li data-en="SaaS development" data-fr="Développement SaaS">SaaS development</li>
+            <li data-en="Project &amp; retainer" data-fr="Projets &amp; abonnement">Project &amp; retainer</li>
+          </ul>
+          <span class="pill" data-en="Live" data-fr="En ligne">Live</span>
+        </button>
+        <button type="button" class="vc val" data-modal="v5">
+          <span class="vc-top" style="background:var(--pink)"></span>
+          <div class="vc-num">05</div>
+          <h3>Orcrist Maison</h3>
+          <div class="vc-sector" style="color:var(--pink)">Fashion</div>
+          <ul>
+            <li data-en="DTC &amp; wholesale" data-fr="DTC &amp; wholesale">DTC &amp; wholesale</li>
+            <li data-en="Brand incubator" data-fr="Incubateur de marques">Brand incubator</li>
+            <li data-en="Designer equity" data-fr="Equité créateurs">Designer equity</li>
+            <li data-en="Fashion fund (future)" data-fr="Fonds mode (futur)">Fashion fund (future)</li>
+          </ul>
+          <span class="pill" data-en="Building" data-fr="En construction">Building</span>
+        </button>
+      </div>
+      <p class="vc-hint" data-en="Click any vertical to explore" data-fr="Cliquez une verticale pour explorer">Click any vertical to explore</p>
+    </section>
+
+    <section id="structure">
+      <p class="section-tag rv" data-en="Governance" data-fr="Gouvernance">Governance</p>
+      <h2 class="sh rv magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem);margin-bottom:0.5rem" data-en="The full structure." data-fr="La structure complète.">The full structure.</h2>
+      <p class="rv" style="max-width:640px;color:var(--ivory3);font-size:12px;margin-bottom:2rem" data-en="Drag nodes, hover for details, scroll to zoom. The crown marks the parent holding." data-fr="Faites glisser les nœuds, survolez pour les détails, défilez pour zoomer. La couronne marque la holding.">Drag nodes, hover for details, scroll to zoom. The crown marks the parent holding.</p>
+      <div class="structure-wrap">
+        <div class="graph-shell">
+          <div class="graph-crown-toolbar">
+            <div class="graph-crown-badge crown-tilt" id="crown-tilt" aria-hidden="true" title="Parent holding">
+              <span class="graph-crown-icon">♛</span>
+            </div>
+            <p class="graph-crown-caption" data-en="Parent holding" data-fr="Holding mère">Parent holding</p>
+          </div>
+          <div class="graph-box" id="graph-root">
+            <svg id="force-svg" role="img" aria-label="Corporate structure graph"></svg>
+          </div>
+          <div class="graph-legend" aria-hidden="true">
+            <span><i class="lg-gold"></i> <span data-en="Parent holding" data-fr="Holding mère">Parent holding</span></span>
+            <span><i class="lg-blue"></i> <span data-en="Operating subsidiaries" data-fr="Filiales opérationnelles">Operating subsidiaries</span></span>
+            <span><i class="lg-amber"></i> <span data-en="SPV vehicles" data-fr="Véhicules SPV">SPV vehicles</span></span>
+            <span><i class="lg-fund"></i> <span data-en="PE fund" data-fr="Fonds PE">PE fund</span></span>
+            <span><i class="lg-line"></i> <span data-en="GP link (dotted)" data-fr="Lien GP (pointillé)">GP link (dotted)</span></span>
+          </div>
+        </div>
+        <p class="graph-hint" data-en="Drag nodes · Hover for details · Scroll to zoom" data-fr="Glisser · Survol · Zoom molette">Drag nodes · Hover for details · Scroll to zoom</p>
+        <div class="spv-pe-grid">
+          <div class="spv-block">
+            <h4><span class="diamond-icon" aria-hidden="true"></span>
+              <span data-en="Orcrist SPV Co." data-fr="Orcrist SPV Co.">Orcrist SPV Co.</span>
+            </h4>
+            <p style="font-size:12px;color:var(--ivory2)" data-en="One legal entity per deal - ring-fenced liability, co-investors welcome." data-fr="Une entité par opération - responsabilité cloisonnée, co-investisseurs bienvenus.">One legal entity per deal - ring-fenced liability, co-investors welcome.</p>
+            <ul class="spv-list">
+              <li data-en="SPV - RE I (Real estate · SCI)" data-fr="SPV - RE I (Immobilier · SCI)">SPV - RE I (Real estate · SCI)</li>
+              <li data-en="SPV - RE II (Club deal · SCI)" data-fr="SPV - RE II (Club deal · SCI)">SPV - RE II (Club deal · SCI)</li>
+              <li data-en="SPV - Tech I (Startup equity · SAS)" data-fr="SPV - Tech I (Equity startup · SAS)">SPV - Tech I (Startup equity · SAS)</li>
+              <li data-en="SPV - Fashion I (Brand equity · SAS)" data-fr="SPV - Fashion I (Equity marque · SAS)">SPV - Fashion I (Brand equity · SAS)</li>
+              <li data-en="SPV - Opportunistic I (Any sector · SAS)" data-fr="SPV - Opportunistic I (Tout secteur · SAS)">SPV - Opportunistic I (Any sector · SAS)</li>
+            </ul>
+          </div>
+          <div class="pe-block">
+            <h4><span class="hex-icon" aria-hidden="true"></span>
+              <span data-en="Orcrist Capital Fund" data-fr="Orcrist Capital Fund">Orcrist Capital Fund</span>
+            </h4>
+            <p style="font-size:12px;color:var(--ivory2)" data-en="Private equity vehicle - GP: Orcrist Holding. Target raise €500K–€1M first close, €3–5M final. 8–12 deals over 36 months. Tickets €50K–€500K." data-fr="Véhicule private equity - GP : Orcrist Holding. Levée cible 500K–1M € premier closing, 3–5M € final. 8–12 deals sur 36 mois. Tickets 50K–500K €.">Private equity vehicle - GP: Orcrist Holding. Target raise €500K–€1M first close, €3–5M final. 8–12 deals over 36 months. Tickets €50K–€500K.</p>
+            <div class="pe-metrics">
+              <div class="pe-metric"><strong>2%</strong><span data-en="Management" data-fr="Management">Management</span></div>
+              <div class="pe-metric"><strong>20%</strong><span data-en="Carry" data-fr="Carry">Carry</span></div>
+              <div class="pe-metric"><strong>8%</strong><span data-en="Hurdle" data-fr="Seuil">Hurdle</span></div>
+              <div class="pe-metric"><strong>€5M</strong><span data-en="Target (final)" data-fr="Cible (final)">Target (final)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="invest">
+      <section id="calc">
+        <p class="section-tag rv" data-en="Fund economics" data-fr="Économie du fonds">Fund economics</p>
+        <h2 class="sh rv magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem);margin-bottom:0.5rem" data-en="Model your returns." data-fr="Modélisez vos rendements.">Model your returns.</h2>
+        <p class="rv" style="max-width:640px;margin-bottom:2rem;font-size:13px" data-en="Illustrative LP economics: 2% annual management fee on committed capital, 8% preferred return hurdle, 20% carried interest on profits above the hurdle - LP waterfall." data-fr="Économie LP illustrative : 2% de frais de gestion annuels sur le capital engagé, seuil de 8%, carry de 20% sur les profits au-delà du seuil - waterfall LP.">Illustrative LP economics: 2% annual management fee on committed capital, 8% preferred return hurdle, 20% carried interest on profits above the hurdle - LP waterfall.</p>
+        <div class="calc-grid">
+          <div class="rl">
+            <div class="slider-row">
+              <label><span data-en="Ticket size" data-fr="Ticket">Ticket size</span> <span id="ticket-lbl"></span></label>
+              <input type="range" id="sl-ticket" min="25000" max="500000" step="5000" value="100000" />
+            </div>
+            <div class="slider-row">
+              <label><span data-en="Gross multiple" data-fr="Multiple brut">Gross multiple</span> <span id="mult-lbl"></span></label>
+              <input type="range" id="sl-mult" min="15" max="40" step="1" value="25" />
+            </div>
+            <div class="slider-row">
+              <label><span data-en="Time horizon (years)" data-fr="Horizon (années)">Time horizon (years)</span> <span id="yr-lbl"></span></label>
+              <input type="range" id="sl-years" min="3" max="8" step="1" value="5" />
+            </div>
+          </div>
+          <div class="rr result-box">
+            <p style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ivory3);margin:0" data-en="Net return to LP" data-fr="Rendement net LP">Net return to LP</p>
+            <p class="net-big" id="net-proceeds">-</p>
+            <p style="font-size:11px;color:var(--ivory3);margin:0 0 1rem" data-en="after carry and management fees" data-fr="après carry et frais de gestion">after carry and management fees</p>
+            <div class="result-grid">
+              <div class="result-cell"><span data-en="Gross proceeds" data-fr="Produit brut">Gross proceeds</span><strong id="out-gross">-</strong></div>
+              <div class="result-cell"><span data-en="Management fees" data-fr="Frais de gestion">Management fees</span><strong id="out-mgmt">-</strong></div>
+              <div class="result-cell"><span data-en="Carry paid" data-fr="Carry payé">Carry paid</span><strong id="out-carry">-</strong></div>
+              <div class="result-cell"><span data-en="Net IRR" data-fr="TRI net">Net IRR</span><strong id="out-irr">-</strong></div>
+            </div>
+            <p style="font-size:10px;color:var(--ivory3);margin-top:1.25rem;line-height:1.5" data-en="Disclaimer: illustrative only; not investment advice. Tax and side letters not modeled." data-fr="Avertissement : indicatif uniquement ; pas un conseil en investissement. Fiscalité et side letters non modélisés.">Disclaimer: illustrative only; not investment advice. Tax and side letters not modeled.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="qualifier">
+        <p class="section-tag rv" data-en="Qualifier" data-fr="Qualification">Qualifier</p>
+        <h2 class="sh rv magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem);margin-bottom:2rem;text-align:center" data-en="How can Orcrist serve you?" data-fr="Comment Orcrist peut vous servir ?">How can Orcrist serve you?</h2>
+        <div class="quiz-box" id="quiz-root">
+          <div class="quiz-step active" data-step="1">
+            <p class="quiz-q" data-en="What brings you to Orcrist?" data-fr="Qu'est-ce qui vous amène chez Orcrist ?">What brings you to Orcrist?</p>
+            <div class="quiz-options">
+              <button type="button" class="quiz-opt si" data-path="investor"><span data-en="I want to invest - as an LP or co-investor" data-fr="Je souhaite investir - LP ou co-investisseur">I want to invest - as an LP or co-investor</span></button>
+              <button type="button" class="quiz-opt si" data-path="advisory"><span data-en="I need advisory services for my business" data-fr="J'ai besoin de conseils pour mon entreprise">I need advisory services for my business</span></button>
+              <button type="button" class="quiz-opt si" data-path="partner"><span data-en="I want to partner, co-build, or collaborate" data-fr="Je veux partenariat, co-construction ou collaboration">I want to partner, co-build, or collaborate</span></button>
+              <button type="button" class="quiz-opt si" data-path="talent"><span data-en="I want to join the Orcrist team" data-fr="Je veux rejoindre l'équipe Orcrist">I want to join the Orcrist team</span></button>
+            </div>
+          </div>
+          <div class="quiz-step" data-step="2" id="quiz-s2"></div>
+          <div class="quiz-step" data-step="3" id="quiz-s3"></div>
+          <div class="quiz-step" data-step="4" id="quiz-result"></div>
+        </div>
+      </section>
+    </section>
+
+    <section id="philosophy" class="philosophy-section">
+      <p class="section-tag rv" data-en="Philosophy" data-fr="Philosophie">Philosophy</p>
+      <blockquote class="phil-quote rv" data-en="Capital without vision is noise. Vision without capital is silence. We hold both." data-fr="Le capital sans vision est du bruit. La vision sans capital est silence. Nous tenons les deux.">Capital without vision is noise. Vision without capital is silence. We hold both.</blockquote>
+      <div class="pillars">
+        <div class="pillar rv">
+          <span class="ghost-num">01</span>
+          <h4 data-en="Build to last" data-fr="Construire pour durer">Build to last</h4>
+          <p data-en="We compound trust through governance, not headlines." data-fr="Nous composons la confiance par la gouvernance, pas les titres.">We compound trust through governance, not headlines.</p>
+        </div>
+        <div class="pillar rv d1">
+          <span class="ghost-num">02</span>
+          <h4 data-en="Deploy with precision" data-fr="Déployer avec précision">Deploy with precision</h4>
+          <p data-en="Capital follows clarity, not momentum." data-fr="Le capital suit la clarté, pas l'élan.">Capital follows clarity, not momentum.</p>
+        </div>
+        <div class="pillar rv d2">
+          <span class="ghost-num">03</span>
+          <h4 data-en="Grow the ecosystem" data-fr="Faire croître l'écosystème">Grow the ecosystem</h4>
+          <p data-en="Subsidiaries, SPVs, and partners share one standard." data-fr="Filiales, SPV et partenaires partagent un même standard.">Subsidiaries, SPVs, and partners share one standard.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-grid">
+        <div class="rl">
+          <p class="section-tag" data-en="Contact" data-fr="Contact">Contact</p>
+          <h2 class="sh magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem)" data-en="Let's build together." data-fr="Construisons ensemble.">Let's build together.</h2>
+          <div class="contact-info">
+            <p><strong data-en="Headquarters" data-fr="Siège">Headquarters</strong><br />Paris, France</p>
+            <p><strong data-en="General" data-fr="Général">General</strong><br /><a href="mailto:contact@orcristholding.com">contact@orcristholding.com</a></p>
+            <p><strong data-en="Invest" data-fr="Investissement">Invest</strong><br /><a href="mailto:invest@orcristholding.com">invest@orcristholding.com</a></p>
+          </div>
+        </div>
+        <div class="rr">
+          <!-- Replace the Formspree form id with yours: https://formspree.io -->
+          <form class="contact-form" id="contact-form" action="https://formspree.io/f/xpzgqjqw" method="POST">
+            <input type="hidden" name="_subject" value="Orcrist Holding - Website" />
+            <label for="cf-name" data-en="Full name" data-fr="Nom complet">Full name</label>
+            <input id="cf-name" name="name" type="text" required autocomplete="name" data-placeholder-en="Your name" data-placeholder-fr="Votre nom" placeholder="Your name" />
+            <label for="cf-email" data-en="Email" data-fr="Email">Email</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" data-placeholder-en="you@company.com" data-placeholder-fr="vous@entreprise.com" placeholder="you@company.com" />
+            <label for="cf-sub" data-en="Subject" data-fr="Sujet">Subject</label>
+            <input id="cf-sub" name="subject" type="text" data-placeholder-en="How can we help?" data-placeholder-fr="Comment pouvons-nous aider ?" placeholder="How can we help?" />
+            <label for="cf-msg" data-en="Message" data-fr="Message">Message</label>
+            <textarea id="cf-msg" name="message" rows="5" data-placeholder-en="Your message" data-placeholder-fr="Votre message" placeholder="Your message"></textarea>
+            <button type="submit" class="btn-solid" data-en="Send message" data-fr="Envoyer">Send message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <a class="nav-brand" href="#hero">ORCRIST<span class="dot">.</span></a>
+      <nav aria-label="Footer">
+        <a href="#about" data-en="About" data-fr="À propos">About</a>
+        <a href="#verticals" data-en="Verticals" data-fr="Filiales">Verticals</a>
+        <a href="#structure" data-en="Structure" data-fr="Structure">Structure</a>
+        <a href="#invest" data-en="Invest" data-fr="Investir">Invest</a>
+        <a href="#contact" data-en="Contact" data-fr="Contact">Contact</a>
+      </nav>
+      <div class="copy">© <span id="year-copy">2024</span> Orcrist Holding SAS</div>
+    </footer>
+  </main>
+
+  <div id="modal-root" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <button type="button" class="modal-close" id="modal-x" aria-label="Close">×</button>
+    <div class="modal-panel">
+      <div class="modal-inner" id="modal-inner"></div>
+    </div>
+  </div>
+
+  <div class="float-cta float-wa" id="float-wa" aria-hidden="true">
+    <a class="float-btn wa-btn" href="https://wa.me/33600000000?text=Hello%2C%20I%20found%20Orcrist%20Holding%20and%20would%20like%20to%20discuss%20an%20opportunity." target="_blank" rel="noopener noreferrer">
+      <span class="wa-dot" aria-hidden="true"></span>
+      <span data-en="WhatsApp us" data-fr="WhatsApp">WhatsApp us</span>
+    </a>
+  </div>
+  <div class="float-cta float-deck" id="float-deck" aria-hidden="true">
+    <button type="button" class="float-btn" id="deck-toggle" aria-expanded="false">
+      <span class="diamond-icon" aria-hidden="true"></span>
+      <span data-en="Request deck" data-fr="Demander la deck">Request deck</span>
+    </button>
+    <div class="float-panel" id="deck-panel">
+      <p style="font-size:10px;letter-spacing:0.12em;color:var(--ivory3);margin:0 0 0.5rem;text-transform:uppercase" data-en="Email for deck" data-fr="Email pour la deck">Email for deck</p>
+      <input type="email" id="deck-email" placeholder="you@company.com" data-placeholder-en="you@company.com" data-placeholder-fr="vous@entreprise.com" />
+      <button type="button" class="btn-solid" id="deck-send" data-en="Send deck →" data-fr="Envoyer la deck →">Send deck →</button>
+      <p id="deck-msg" style="display:none;font-size:12px;color:var(--gold);margin-top:0.5rem" data-en="Deck sent. Check your inbox." data-fr="Deck envoyée. Vérifiez votre boîte.">Deck sent. Check your inbox.</p>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+(function () {
+  "use strict";
+
+  function prefersPointerFine() {
+    return window.matchMedia("(pointer: fine)").matches;
+  }
+
+  if (prefersPointerFine()) {
+    document.body.classList.add("pointer-fine");
+  }
+
+  /* Loading gate */
+  (function gate() {
+    var gateEl = document.getElementById("loading-gate");
+    var strokeText = document.getElementById("gate-stroke-text");
+    if (!gateEl || !strokeText) return;
+    if (sessionStorage.getItem("orcrist_gate_done") === "1") {
+      gateEl.classList.add("done");
+      gateEl.setAttribute("aria-hidden", "true");
+      return;
+    }
+    var len = strokeText.getComputedTextLength ? strokeText.getComputedTextLength() : 800;
+    strokeText.setAttribute("stroke-dasharray", len);
+    strokeText.setAttribute("stroke-dashoffset", len);
+    requestAnimationFrame(function () {
+      strokeText.style.transition = "stroke-dashoffset 1.8s cubic-bezier(0.16, 1, 0.3, 1)";
+      strokeText.setAttribute("stroke-dashoffset", "0");
+    });
+    gateEl.classList.add("start");
+    setTimeout(function () {
+      gateEl.classList.add("done");
+      gateEl.setAttribute("aria-hidden", "true");
+      sessionStorage.setItem("orcrist_gate_done", "1");
+    }, 2400);
+  })();
+
+  /* Ticker duplicate */
+  (function ticker() {
+    var t = document.getElementById("ticker-dup");
+    if (!t) return;
+    t.innerHTML += t.innerHTML;
+  })();
+
+  /* Noise */
+  function hashNoise(x, y, seed) {
+    var n = Math.sin(x * 12.9898 + y * 78.233 + seed * 0.001) * 43758.5453;
+    return n - Math.floor(n);
+  }
+
+  /* Particle engine */
+  var canvas = document.getElementById("particle-canvas");
+  var ctx = canvas && canvas.getContext("2d");
+  var particles = [];
+  var trails = [];
+  var W = 0, H = 0;
+  var scrollY = 0;
+  var mouseX = 0, mouseY = 0;
+  var prevMX = 0, prevMY = 0;
+  var velX = 0, velY = 0;
+  var sectionColors = [
+    { r: 201, g: 168, b: 76 },
+    { r: 20, g: 184, b: 166 },
+    { r: 139, g: 92, b: 246 },
+    { r: 59, g: 130, b: 246 },
+    { r: 34, g: 197, b: 94 },
+    { r: 236, g: 72, b: 153 },
+    { r: 201, g: 168, b: 76 }
+  ];
+  var goldRGB = { r: 201, g: 168, b: 76 };
+  var currentRGB = { r: goldRGB.r, g: goldRGB.g, b: goldRGB.b };
+  var targetRGB = { r: goldRGB.r, g: goldRGB.g, b: goldRGB.b };
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function lerpColor(towards, amt) {
+    currentRGB.r = lerp(currentRGB.r, towards.r, amt);
+    currentRGB.g = lerp(currentRGB.g, towards.g, amt);
+    currentRGB.b = lerp(currentRGB.b, towards.b, amt);
+  }
+
+  function resizeCanvas() {
+    if (!canvas) return;
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W;
+    canvas.height = H;
+    var cap = Math.min(240, Math.floor((W * H) / 5800));
+    if (particles.length !== cap) {
+      particles = [];
+      for (var i = 0; i < cap; i++) {
+        var roll = Math.random();
+        var type = roll < 0.55 ? "gold" : roll < 0.8 ? "ivory" : "mix";
+        particles.push({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          life: Math.random(),
+          seed: Math.random() * 1000,
+          type: type,
+          speed: 0.15 + Math.random() * 0.35
+        });
+      }
+    }
+  }
+
+  function updateSectionColor() {
+    var ids = ["hero", "about", "verticals", "structure", "invest", "philosophy", "contact"];
+    var idx = 0;
+    var mid = scrollY + H * 0.35;
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (!el) continue;
+      var r = el.getBoundingClientRect();
+      var top = r.top + scrollY;
+      if (mid >= top && mid < top + r.height) {
+        idx = i;
+        break;
+      }
+    }
+    targetRGB = sectionColors[idx] || sectionColors[0];
+  }
+
+  function drawParticles() {
+    if (!ctx) return;
+    lerpColor(targetRGB, 0.02);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.setTransform(1, 0, 0, 1, 0, scrollY * 0.13);
+    var i, j, p, dx, dy, d, f, ang, nx, ny;
+    for (i = 0; i < particles.length; i++) {
+      p = particles[i];
+      nx = hashNoise(p.x * 0.002, p.y * 0.002, p.seed);
+      ny = hashNoise(p.x * 0.002 + 50, p.y * 0.002 + 50, p.seed);
+      p.vx += (nx - 0.5) * 0.08 * p.speed;
+      p.vy += (ny - 0.5) * 0.08 * p.speed;
+      dx = p.x - mouseX;
+      dy = p.y - mouseY;
+      d = dx * dx + dy * dy;
+      if (d < 200 * 200 && d > 1) {
+        f = 8000 / d;
+        p.vx += (dx / Math.sqrt(d)) * f * 0.015;
+        p.vy += (dy / Math.sqrt(d)) * f * 0.015;
+      }
+      if (d < 350 * 350 && d > 1) {
+        p.vx += velX * 0.012;
+        p.vy += velY * 0.012;
+      }
+      p.vx *= 0.985;
+      p.vy *= 0.985;
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x += W;
+      if (p.x > W) p.x -= W;
+      if (p.y < 0) p.y += H;
+      if (p.y > H) p.y -= H;
+      p.life += 0.01;
+    }
+    for (i = 0; i < particles.length; i++) {
+      for (j = i + 1; j < particles.length; j++) {
+        dx = particles[i].x - particles[j].x;
+        dy = particles[i].y - particles[j].y;
+        d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 115) {
+          var op = (1 - d / 115) * 0.15;
+          var cr = currentRGB.r, cg = currentRGB.g, cb = currentRGB.b;
+          if (particles[i].type === "ivory") { cr = 245; cg = 242; cb = 235; }
+          else if (particles[i].type === "mix") { cr = 139; cg = 92; cb = 246; }
+          ctx.strokeStyle = "rgba(" + cr + "," + cg + "," + cb + "," + op + ")";
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    for (i = 0; i < particles.length; i++) {
+      p = particles[i];
+      var pr = currentRGB.r, pg = currentRGB.g, pb = currentRGB.b;
+      if (p.type === "ivory") { pr = 245; pg = 242; pb = 235; }
+      else if (p.type === "mix") { pr = 139; pg = 92; pb = 246; }
+      ctx.fillStyle = "rgba(" + pr + "," + pg + "," + pb + "," + (0.35 + 0.25 * Math.sin(p.life)) + ")";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.type === "gold" ? 1.2 : 1, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    for (i = trails.length - 1; i >= 0; i--) {
+      var tr = trails[i];
+      tr.age++;
+      tr.size *= 0.92;
+      tr.op *= 0.94;
+      if (tr.age > 33 || tr.op < 0.02) {
+        trails.splice(i, 1);
+        continue;
+      }
+      ctx.fillStyle = "rgba(201,168,76," + tr.op + ")";
+      ctx.beginPath();
+      ctx.arc(tr.x, tr.y, tr.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+
+  function loop() {
+    drawParticles();
+    requestAnimationFrame(loop);
+  }
+  if (canvas && ctx) {
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+    loop();
+  }
+
+  document.addEventListener("mousemove", function (e) {
+    velX = (e.clientX - prevMX) * 0.4;
+    velY = (e.clientY - prevMY) * 0.4;
+    prevMX = e.clientX;
+    prevMY = e.clientY;
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    var speed = Math.sqrt(velX * velX + velY * velY);
+    if (speed > 2 && prefersPointerFine()) {
+      trails.push({ x: mouseX, y: mouseY, size: 3 + Math.random() * 2, op: 0.6, age: 0 });
+    }
+  });
+
+  /* Single scroll listener */
+  var navEl = document.getElementById("site-nav");
+  var floatDeck = document.getElementById("float-deck");
+  var floatWa = document.getElementById("float-wa");
+  window.addEventListener("scroll", function () {
+    scrollY = window.scrollY || document.documentElement.scrollTop;
+    if (navEl) {
+      navEl.classList.toggle("scrolled", scrollY > 40);
+    }
+    updateSectionColor();
+    var showFloat = scrollY > 500;
+    if (floatDeck) {
+      floatDeck.classList.toggle("visible", showFloat);
+      floatDeck.setAttribute("aria-hidden", showFloat ? "false" : "true");
+    }
+    if (floatWa) {
+      floatWa.classList.toggle("visible", showFloat);
+      floatWa.setAttribute("aria-hidden", showFloat ? "false" : "true");
+    }
+  }, { passive: true });
+
+  /* Custom cursor spring */
+  var dot = document.getElementById("cursor-dot");
+  var ring = document.getElementById("cursor-ring");
+  var ringX = 0, ringY = 0;
+  var ringTarget = 36;
+  function cursorLoop() {
+    if (!dot || !ring || !prefersPointerFine()) return;
+    ringX += (mouseX - ringX) * 0.11;
+    ringY += (mouseY - ringY) * 0.11;
+    dot.style.left = mouseX + "px";
+    dot.style.top = mouseY + "px";
+    ring.style.left = ringX + "px";
+    ring.style.top = ringY + "px";
+    var rw = ring.classList.contains("expanded") ? 56 : 36;
+    ring.style.width = rw + "px";
+    ring.style.height = rw + "px";
+    requestAnimationFrame(cursorLoop);
+  }
+  cursorLoop();
+
+  function setInteractiveHover(on) {
+    if (!ring) return;
+    ring.classList.toggle("expanded", on);
+  }
+  document.querySelectorAll('a, button, input, textarea, select, .vc, .val, .si, .quiz-opt, [data-modal], .nav-mobile a, .nav-toggle, .nav-mobile-close, .magnetic-text').forEach(function (el) {
+    el.addEventListener("mouseenter", function () { setInteractiveHover(true); });
+    el.addEventListener("mouseleave", function () { setInteractiveHover(false); });
+  });
+
+  /* Scroll reveal */
+  var rvObs = new IntersectionObserver(function (ents) {
+    ents.forEach(function (en) {
+      if (en.isIntersecting) {
+        en.target.classList.add("in-view");
+        rvObs.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.07 });
+  document.querySelectorAll(".rv, .rl, .rr").forEach(function (el, idx) {
+    if (!el.classList.contains("hero-title")) rvObs.observe(el);
+  });
+
+  /* Counters */
+  var countObs = new IntersectionObserver(function (ents) {
+    ents.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      var tgt = parseInt(el.getAttribute("data-target"), 10);
+      if (isNaN(tgt)) return;
+      var frame = 0;
+      var maxF = 42;
+      var iv = setInterval(function () {
+        frame++;
+        var t = frame / maxF;
+        t = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(tgt * t);
+        if (frame >= maxF) {
+          el.textContent = tgt;
+          clearInterval(iv);
+        }
+      }, 28);
+      countObs.unobserve(el);
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll("[data-target]").forEach(function (el) {
+    countObs.observe(el);
+  });
+
+  function getMagneticPlainText(el) {
+    var lang = document.documentElement.lang === "fr" ? "fr" : "en";
+    if (el.hasAttribute("data-en")) {
+      var v = el.getAttribute("data-" + lang) || el.getAttribute("data-en");
+      if (v != null) {
+        var tmp = document.createElement("div");
+        tmp.innerHTML = v;
+        return tmp.textContent || "";
+      }
+    }
+    return (el.textContent || "").trim();
+  }
+
+  function isWhitespaceChar(ch) {
+    return ch.length === 1 && /\s/u.test(ch);
+  }
+
+  function initAllMagneticText() {
+    document.querySelectorAll(".magnetic-text").forEach(function (el) {
+      var text = getMagneticPlainText(el);
+      if (!text) return;
+      var markIdx = el.getAttribute("data-magnetic-mark");
+      markIdx = markIdx != null && markIdx !== "" ? parseInt(markIdx, 10) : -1;
+      if (isNaN(markIdx)) markIdx = -1;
+      el.innerHTML = "";
+      var chars = Array.from(text);
+      for (var i = 0; i < chars.length; i++) {
+        var span = document.createElement("span");
+        span.className = "mag-char";
+        if (i === markIdx) span.classList.add("mag-char-mark");
+        var ch = chars[i];
+        if (isWhitespaceChar(ch)) {
+          span.classList.add("mag-char-space");
+          span.textContent = "\u00A0";
+        } else {
+          span.textContent = ch;
+        }
+        el.appendChild(span);
+      }
+    });
+  }
+
+  function bindMagneticPointer() {
+    if (!prefersPointerFine() || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    document.querySelectorAll(".magnetic-text").forEach(function (sourceEl) {
+      if (sourceEl.getAttribute("data-magnetic-bound") === "1") return;
+      sourceEl.setAttribute("data-magnetic-bound", "1");
+      var host = sourceEl.closest(".nav-link-featured") || sourceEl;
+      var raf = null;
+      host.addEventListener("mousemove", function (e) {
+        var mx = e.clientX;
+        var my = e.clientY;
+        var strength = parseFloat(sourceEl.getAttribute("data-magnetic-strength") || "1");
+        if (isNaN(strength) || strength <= 0) strength = 1;
+        var baseScale = 52 / Math.sqrt(strength);
+        if (raf) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          sourceEl.querySelectorAll(".mag-char").forEach(function (ch) {
+            var r = ch.getBoundingClientRect();
+            var cx = r.left + r.width / 2;
+            var cy = r.top + r.height / 2;
+            var dx = (mx - cx) / baseScale;
+            var dy = (my - cy) / baseScale;
+            var tx = Math.max(-4.5 * strength, Math.min(4.5 * strength, -dx * 5));
+            var ty = Math.max(-3 * strength, Math.min(3 * strength, -dy * 3.5));
+            ch.style.transform = "translate(" + tx.toFixed(2) + "px," + ty.toFixed(2) + "px)";
+          });
+        });
+      });
+      host.addEventListener("mouseleave", function () {
+        sourceEl.querySelectorAll(".mag-char").forEach(function (ch) {
+          ch.style.transform = "";
+        });
+      });
+    });
+  }
+
+  initAllMagneticText();
+  bindMagneticPointer();
+
+  /* Quote tilt */
+  var qBox = document.getElementById("quote-tilt");
+  function tiltBox(el, maxDeg) {
+    if (!el) return;
+    el.addEventListener("mousemove", function (e) {
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = "perspective(900px) rotateY(" + (-px * maxDeg * 2) + "deg) rotateX(" + (py * maxDeg * 2) + "deg)";
+    });
+    el.addEventListener("mouseleave", function () {
+      el.style.transition = "transform 0.35s ease";
+      el.style.transform = "perspective(900px) rotateX(0) rotateY(0)";
+      setTimeout(function () { el.style.transition = "transform 0.1s linear"; }, 350);
+    });
+  }
+  tiltBox(qBox, 14);
+
+  var crown = document.getElementById("crown-tilt");
+  if (crown) {
+    crown.addEventListener("mousemove", function (e) {
+      var r = crown.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      crown.style.transform = "perspective(600px) rotateY(" + (-px * 14) + "deg) rotateX(" + (py * 14) + "deg)";
+    });
+    crown.addEventListener("mouseleave", function () {
+      crown.style.transform = "none";
+    });
+  }
+
+  /* i18n */
+  function applyLang(lang) {
+    var main = document.getElementById("main-content");
+    var lg = document.getElementById("lang-toggle");
+    if (lg) lg.classList.toggle("lang-is-fr", lang === "fr");
+    if (main) main.classList.add("lang-swap-anim");
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-en][data-fr]").forEach(function (el) {
+      var v = lang === "fr" ? el.getAttribute("data-fr") : el.getAttribute("data-en");
+      if (v != null) el.innerHTML = v;
+    });
+    document.querySelectorAll("[data-placeholder-en][data-placeholder-fr]").forEach(function (el) {
+      var ph = lang === "fr" ? el.getAttribute("data-placeholder-fr") : el.getAttribute("data-placeholder-en");
+      if (ph != null) el.setAttribute("placeholder", ph);
+    });
+    document.getElementById("lang-en").classList.toggle("active", lang === "en");
+    document.getElementById("lang-fr").classList.toggle("active", lang === "fr");
+    document.getElementById("lang-en").setAttribute("aria-pressed", lang === "en");
+    document.getElementById("lang-fr").setAttribute("aria-pressed", lang === "fr");
+    setTimeout(function () {
+      if (main) main.classList.remove("lang-swap-anim");
+    }, 560);
+    initAllMagneticText();
+  }
+  document.getElementById("lang-en").addEventListener("click", function () { applyLang("en"); });
+  document.getElementById("lang-fr").addEventListener("click", function () { applyLang("fr"); });
+
+  var navToggle = document.getElementById("nav-toggle");
+  var navMobile = document.getElementById("nav-mobile");
+  var navClose = document.getElementById("nav-mobile-close");
+  function openNavMobile() {
+    if (!navMobile) return;
+    navMobile.classList.add("open");
+    navMobile.setAttribute("aria-hidden", "false");
+    if (navToggle) navToggle.setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+  }
+  function closeNavMobile() {
+    if (!navMobile) return;
+    navMobile.classList.remove("open");
+    navMobile.setAttribute("aria-hidden", "true");
+    if (navToggle) navToggle.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+  }
+  if (navToggle && navMobile) {
+    navToggle.addEventListener("click", function () {
+      if (navMobile.classList.contains("open")) closeNavMobile();
+      else openNavMobile();
+    });
+  }
+  if (navClose) navClose.addEventListener("click", closeNavMobile);
+  if (navMobile) {
+    navMobile.querySelectorAll("a").forEach(function (a) {
+      a.addEventListener("click", closeNavMobile);
+    });
+  }
+
+  /* Calculator */
+  var eurFmt = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+  function calc() {
+    var ticket = parseInt(document.getElementById("sl-ticket").value, 10);
+    var mult = parseInt(document.getElementById("sl-mult").value, 10) / 10;
+    var years = parseInt(document.getElementById("sl-years").value, 10);
+    document.getElementById("ticket-lbl").textContent = eurFmt.format(ticket);
+    document.getElementById("mult-lbl").textContent = mult.toFixed(1) + "×";
+    document.getElementById("yr-lbl").textContent = years + "y";
+    var gross = ticket * mult;
+    var mgmtFees = ticket * 0.02 * years;
+    var netBeforeCarry = gross - mgmtFees;
+    var hurdle = ticket * Math.pow(1.08, years);
+    var carry = 0;
+    if (netBeforeCarry > hurdle) {
+      carry = (netBeforeCarry - hurdle) * 0.2;
+    }
+    var netProceeds = netBeforeCarry - carry;
+    var netProfit = netProceeds - ticket;
+    var irr = (Math.pow(netProceeds / ticket, 1 / years) - 1) * 100;
+    document.getElementById("out-gross").textContent = eurFmt.format(gross);
+    document.getElementById("out-mgmt").textContent = eurFmt.format(mgmtFees);
+    document.getElementById("out-carry").textContent = eurFmt.format(carry);
+    document.getElementById("net-proceeds").textContent = eurFmt.format(netProceeds);
+    document.getElementById("out-irr").textContent = irr.toFixed(2) + "%";
+  }
+  ["sl-ticket", "sl-mult", "sl-years"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener("input", calc);
+  });
+  calc();
+
+  /* Modal verticals */
+  var MOD = {
+    v1: {
+      color: "#3B82F6",
+      tag: "Finance",
+      title: "Orcrist Capital",
+      body: "Orcrist Capital deploys proprietary capital in public markets, manages third-party portfolios, and provides wealth advisory. As general partner of the Orcrist Capital Fund, it aligns GP economics with institutional discipline and transparent reporting.",
+      stats: [
+        { k: "Structure", v: "SAS · Paris" },
+        { k: "Revenue", v: "Trading P&amp;L + AUM fees + carry" },
+        { k: "Status", v: "Active" },
+        { k: "Scale path", v: "AUM &amp; fund closes" },
+        { k: "Risk", v: "Markets &amp; liquidity" },
+        { k: "Contact", v: "invest@orcristholding.com" }
+      ],
+      cta: "#calc",
+      ctaLabel: "Model LP returns"
+    },
+    v2: {
+      color: "#14B8A6",
+      tag: "Advisory",
+      title: "Orcrist Conseil",
+      body: "Orcrist Conseil supports founders and SMEs with French administrative processes, business incorporation, M&amp;A execution, and regulatory alignment. Engagements blend fixed-fee clarity with ongoing retainers where continuity matters.",
+      stats: [
+        { k: "Structure", v: "SAS · Paris" },
+        { k: "Revenue", v: "Fees + retainer" },
+        { k: "Status", v: "Active" },
+        { k: "Focus", v: "Compliance &amp; growth" },
+        { k: "Delivery", v: "Operator-led" },
+        { k: "Contact", v: "contact@orcristholding.com" }
+      ],
+      cta: "#contact",
+      ctaLabel: "Book a conversation"
+    },
+    v3: {
+      color: "#22C55E",
+      tag: "Real estate",
+      title: "Orcrist Estates",
+      body: "Orcrist Estates acquires and develops property through SCI structures per asset, builds rental yield, and structures club deals via dedicated SPVs. Liability remains ring-fenced at the vehicle level.",
+      stats: [
+        { k: "Structure", v: "SAS · Paris" },
+        { k: "Revenue", v: "Yield + capital gain" },
+        { k: "Status", v: "In progress" },
+        { k: "Vehicles", v: "SCI / SPV" },
+        { k: "Horizon", v: "Long hold" },
+        { k: "Contact", v: "contact@orcristholding.com" }
+      ],
+      cta: "#structure",
+      ctaLabel: "See SPV layer"
+    },
+    v4: {
+      color: "#8B5CF6",
+      tag: "Technology",
+      title: "Orcrist Labs",
+      body: "Orcrist Labs delivers restaurant technology consulting, enterprise AI advisory, and SaaS product development. Revenue combines project fees, software subscriptions, and strategic retainers for execution continuity.",
+      stats: [
+        { k: "Structure", v: "SAS · Paris" },
+        { k: "Revenue", v: "Product + projects" },
+        { k: "Status", v: "Live" },
+        { k: "Segments", v: "Hospitality &amp; AI" },
+        { k: "Delivery", v: "Sprint + scale" },
+        { k: "Contact", v: "contact@orcristholding.com" }
+      ],
+      cta: "#contact",
+      ctaLabel: "Discuss a project"
+    },
+    v5: {
+      color: "#EC4899",
+      tag: "Fashion",
+      title: "Orcrist Maison",
+      body: "Orcrist Maison is building a contemporary fashion house with DTC and wholesale channels, an incubator model for designers, and a future fashion investment sleeve. Brand equity and product cadence compound together.",
+      stats: [
+        { k: "Structure", v: "SAS · Paris" },
+        { k: "Revenue", v: "Sales + equity" },
+        { k: "Status", v: "Building" },
+        { k: "Model", v: "Brand + incubator" },
+        { k: "Horizon", v: "Seasonal" },
+        { k: "Contact", v: "contact@orcristholding.com" }
+      ],
+      cta: "#contact",
+      ctaLabel: "Partner with Maison"
+    }
+  };
+
+  var modalRoot = document.getElementById("modal-root");
+  var modalInner = document.getElementById("modal-inner");
+
+  function openModal(key) {
+    var m = MOD[key];
+    if (!m) return;
+    var statsHtml = m.stats.map(function (s) {
+      return "<div class=\"ms\"><b>" + s.k + "</b>" + s.v + "</div>";
+    }).join("");
+    modalInner.innerHTML =
+      "<p class=\"modal-tag\">" + m.tag + "</p>" +
+      "<h2 class=\"modal-title\" style=\"color:" + m.color + "\">" + m.title + "</h2>" +
+      "<p class=\"modal-loc\">SAS subsidiary · Paris, France</p>" +
+      "<div class=\"modal-div\" style=\"background:" + m.color + ";opacity:0.35;height:2px\"></div>" +
+      "<p class=\"modal-body\">" + m.body + "</p>" +
+      "<div class=\"modal-stats\">" + statsHtml + "</div>" +
+      "<a class=\"btn-solid\" href=\"" + m.cta + "\">" + m.ctaLabel + "</a>";
+    modalRoot.classList.add("open");
+    modalRoot.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modalRoot.classList.remove("open");
+    modalRoot.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  document.querySelectorAll("[data-modal]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      openModal(btn.getAttribute("data-modal"));
+    });
+  });
+  document.getElementById("modal-x").addEventListener("click", closeModal);
+  modalRoot.addEventListener("click", function (e) {
+    if (e.target === modalRoot) closeModal();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeModal();
+  });
+
+  /* Quiz */
+  var quizPath = "";
+  var quizStep = 1;
+
+  function showQuizStep(n) {
+    document.querySelectorAll("#quiz-root .quiz-step").forEach(function (s) {
+      s.classList.toggle("active", parseInt(s.getAttribute("data-step"), 10) === n);
+    });
+  }
+
+  function quizHtml2() {
+    var map = {
+      investor: { q: "What ticket size?", opts: [
+        { t: "Under €50K", v: "s1" }, { t: "€50–150K", v: "s2" }, { t: "€150–500K", v: "s3" }, { t: "Over €500K", v: "s4" }
+      ]},
+      advisory: { q: "What type of advisory?", opts: [
+        { t: "French admin", v: "a1" }, { t: "Business setup", v: "a2" }, { t: "M&amp;A", v: "a3" }, { t: "Compliance", v: "a4" }
+      ]},
+      partner: { q: "What kind of collaboration?", opts: [
+        { t: "JV", v: "p1" }, { t: "Deal flow", v: "p2" }, { t: "Strategic", v: "p3" }, { t: "Invest + partner", v: "p4" }
+      ]},
+      talent: { q: "What's your background?", opts: [
+        { t: "Finance", v: "t1" }, { t: "Tech", v: "t2" }, { t: "Advisory", v: "t3" }, { t: "Fashion", v: "t4" }
+      ]}
+    };
+    var block = map[quizPath];
+    if (!block) return "";
+    var h = "<p class=\"quiz-q\">" + block.q + "</p><div class=\"quiz-options\">";
+    block.opts.forEach(function (o) {
+      h += "<button type=\"button\" class=\"quiz-opt si\" data-v2=\"" + o.v + "\"><span>" + o.t + "</span></button>";
+    });
+    h += "</div><div class=\"quiz-nav\"><button type=\"button\" class=\"quiz-back\" data-back=\"1\">Back</button></div>";
+    return h;
+  }
+
+  function quizHtml3() {
+    var map = {
+      investor: { q: "What's your timeline?", opts: [
+        { t: "3–5 years", v: "u1" }, { t: "5–7 years", v: "u2" }, { t: "7+ evergreen", v: "u3" }, { t: "Exploring", v: "u4" }
+      ]},
+      advisory: { q: "What's your timeline?", opts: [
+        { t: "Urgent", v: "b1" }, { t: "1 month", v: "b2" }, { t: "This quarter", v: "b3" }, { t: "Exploring", v: "b4" }
+      ]},
+      partner: { q: "What sector?", opts: [
+        { t: "Finance", v: "c1" }, { t: "Tech", v: "c2" }, { t: "Real estate", v: "c3" }, { t: "Fashion", v: "c4" }
+      ]},
+      talent: { q: "What are you looking for?", opts: [
+        { t: "Full-time", v: "d1" }, { t: "Contract", v: "d2" }, { t: "Equity", v: "d3" }, { t: "Advisory board", v: "d4" }
+      ]}
+    };
+    var block = map[quizPath];
+    if (!block) return "";
+    var h = "<p class=\"quiz-q\">" + block.q + "</p><div class=\"quiz-options\">";
+    block.opts.forEach(function (o) {
+      h += "<button type=\"button\" class=\"quiz-opt si\" data-v3=\"" + o.v + "\"><span>" + o.t + "</span></button>";
+    });
+    h += "</div><div class=\"quiz-nav\"><button type=\"button\" class=\"quiz-back\" data-back=\"2\">Back</button></div>";
+    return h;
+  }
+
+  function quizResult() {
+    var profiles = {
+      investor: {
+        tag: "LP / Co-investor",
+        title: "Institutional alignment",
+        text: "Your profile maps to our private fund and co-investment sleeves. We recommend reviewing the LP economics model, then scheduling a call with our investment team to align on mandate, ticket, and documentation.",
+        cta: "#calc",
+        ctaLabel: "Open return model"
+      },
+      advisory: {
+        tag: "Advisory client",
+        title: "Execution support",
+        text: "Orcrist Conseil can scope administrative, incorporation, M&amp;A, and compliance work. Share your timeline and we will propose a fixed-fee path or retainer structure matched to urgency.",
+        cta: "#contact",
+        ctaLabel: "Contact Conseil"
+      },
+      partner: {
+        tag: "Strategic partner",
+        title: "Co-build opportunities",
+        text: "We partner on joint ventures, deal flow, and strategic initiatives across subsidiaries. The holding structure keeps governance clean while allowing ring-fenced SPVs when needed.",
+        cta: "#structure",
+        ctaLabel: "Review structure"
+      },
+      talent: {
+        tag: "Talent",
+        title: "Join the operator bench",
+        text: "We hire and collaborate with senior operators across finance, technology, advisory, and fashion. Send your background and preferred engagement model - full-time, contract, or advisory.",
+        cta: "#contact",
+        ctaLabel: "Send profile"
+      }
+    };
+    var p = profiles[quizPath];
+    return "<p class=\"modal-tag\">" + p.tag + "</p>" +
+      "<h3 class=\"sh\" style=\"font-size:1.75rem;margin-top:0\">" + p.title + "</h3>" +
+      "<p style=\"font-size:14px;line-height:1.75;color:var(--ivory2)\">" + p.text + "</p>" +
+      "<a class=\"btn-solid\" href=\"" + p.cta + "\" style=\"margin-top:1rem;display:inline-block\">" + p.ctaLabel + "</a>" +
+      "<p style=\"margin-top:1.5rem\"><a href=\"#\" id=\"quiz-restart\" style=\"color:var(--gold);font-size:11px;letter-spacing:0.14em;text-transform:uppercase\">Start again</a></p>";
+  }
+
+  document.getElementById("quiz-root").addEventListener("click", function (e) {
+    var t = e.target;
+    var restart = t.closest && t.closest("#quiz-restart");
+    if (restart) {
+      e.preventDefault();
+      quizPath = "";
+      quizStep = 1;
+      document.getElementById("quiz-s2").innerHTML = "";
+      document.getElementById("quiz-s3").innerHTML = "";
+      document.getElementById("quiz-result").innerHTML = "";
+      showQuizStep(1);
+      return;
+    }
+    var pathBtn = t.closest && t.closest("[data-path]");
+    if (pathBtn) {
+      quizPath = pathBtn.getAttribute("data-path");
+      document.getElementById("quiz-s2").innerHTML = quizHtml2();
+      quizStep = 2;
+      showQuizStep(2);
+      return;
+    }
+    var v2 = t.closest && t.closest("[data-v2]");
+    if (v2) {
+      document.getElementById("quiz-s3").innerHTML = quizHtml3();
+      quizStep = 3;
+      showQuizStep(3);
+      return;
+    }
+    var v3 = t.closest && t.closest("[data-v3]");
+    if (v3) {
+      document.getElementById("quiz-result").innerHTML = quizResult();
+      quizStep = 4;
+      showQuizStep(4);
+      return;
+    }
+    var b1 = t.closest && t.closest("[data-back=\"1\"]");
+    if (b1) {
+      document.getElementById("quiz-s2").innerHTML = "";
+      document.getElementById("quiz-s3").innerHTML = "";
+      showQuizStep(1);
+      return;
+    }
+    var b2 = t.closest && t.closest("[data-back=\"2\"]");
+    if (b2) {
+      document.getElementById("quiz-s3").innerHTML = "";
+      showQuizStep(2);
+    }
+  });
+
+  /* Deck floating */
+  var deckToggle = document.getElementById("deck-toggle");
+  var deckPanel = document.getElementById("deck-panel");
+  var deckSend = document.getElementById("deck-send");
+  var deckMsg = document.getElementById("deck-msg");
+  deckToggle.addEventListener("click", function () {
+    var open = deckPanel.classList.toggle("open");
+    deckToggle.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+  deckSend.addEventListener("click", function () {
+    deckMsg.style.display = "block";
+    setTimeout(function () {
+      deckMsg.style.display = "none";
+      deckPanel.classList.remove("open");
+      document.getElementById("deck-email").value = "";
+      deckToggle.setAttribute("aria-expanded", "false");
+    }, 3000);
+  });
+
+  /* D3 graph */
+  function initGraph() {
+    if (typeof d3 === "undefined" || window.__orcristGraphDone) return;
+    var svg = d3.select("#force-svg");
+    var box = document.getElementById("graph-root");
+    if (!box) return;
+    var width = box.clientWidth || 800;
+    var height = box.clientHeight || 520;
+    if (width < 200) width = 800;
+    if (height < 200) height = 520;
+    svg.selectAll("*").remove();
+    svg
+      .attr("viewBox", "0 0 " + width + " " + height)
+      .attr("class", "org-chart-svg")
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .attr("xmlns", "http://www.w3.org/2000/svg");
+    svg.append("title").text("Orcrist Holding - corporate structure. Drag nodes, scroll to zoom.");
+    var gRoot = svg.append("g").attr("class", "graph-zoom-inner");
+    var nodes = [
+      { id: "holding", name: "ORCRIST HOLDING", type: "Parent holding", desc: "Paris SAS - owns all operating subsidiaries, SPV layer, and fund GP.", r: 36, fill: "url(#grad-gold)" },
+      { id: "capital", name: "Orcrist Capital", type: "Subsidiary", desc: "Finance & investment - trading, advisory, fund GP.", r: 26, fill: "url(#grad-blue)" },
+      { id: "conseil", name: "Orcrist Conseil", type: "Subsidiary", desc: "Advisory - admin, M&amp;A, compliance.", r: 26, fill: "url(#grad-teal)" },
+      { id: "estates", name: "Orcrist Estates", type: "Subsidiary", desc: "Real estate - SCI, yield, development.", r: 26, fill: "url(#grad-green)" },
+      { id: "labs", name: "Orcrist Labs", type: "Subsidiary", desc: "Technology - SaaS, AI, hospitality tech.", r: 26, fill: "url(#grad-purple)" },
+      { id: "maison", name: "Orcrist Maison", type: "Subsidiary", desc: "Fashion - brand build, DTC, incubator.", r: 26, fill: "url(#grad-pink)" },
+      { id: "spvco", name: "Orcrist SPV Co.", type: "SPV layer", desc: "Ring-fenced vehicles per deal - no cross-liability.", r: 20, fill: "url(#grad-amber)" },
+      { id: "fund", name: "Orcrist Capital Fund", type: "PE fund", desc: "2% / 20% / 8% hurdle - multi-sector mandate.", r: 22, fill: "url(#grad-fund)" },
+      { id: "re1", name: "SPV - RE I", type: "SPV", desc: "Real estate · SCI", r: 13, fill: "url(#grad-amber)" },
+      { id: "re2", name: "SPV - RE II", type: "SPV", desc: "Club deal · SCI", r: 13, fill: "url(#grad-amber)" },
+      { id: "tech1", name: "SPV - Tech I", type: "SPV", desc: "Startup equity · SAS", r: 13, fill: "url(#grad-amber)" },
+      { id: "fash1", name: "SPV - Fashion I", type: "SPV", desc: "Brand equity · SAS", r: 13, fill: "url(#grad-amber)" }
+    ];
+    var links = [
+      { source: "holding", target: "capital" },
+      { source: "holding", target: "conseil" },
+      { source: "holding", target: "estates" },
+      { source: "holding", target: "labs" },
+      { source: "holding", target: "maison" },
+      { source: "holding", target: "spvco" },
+      { source: "holding", target: "fund" },
+      { source: "spvco", target: "re1" },
+      { source: "spvco", target: "re2" },
+      { source: "spvco", target: "tech1" },
+      { source: "spvco", target: "fash1" },
+      { source: "fund", target: "capital", dashed: true }
+    ];
+    var defs = svg.append("defs");
+    var rg = defs.append("radialGradient").attr("id", "graph-bg-glow").attr("cx", "50%").attr("cy", "45%").attr("r", "65%");
+    rg.append("stop").attr("offset", "0%").attr("stop-color", "rgba(201,168,76,0.055)");
+    rg.append("stop").attr("offset", "50%").attr("stop-color", "rgba(18,18,30,0)");
+    rg.append("stop").attr("offset", "100%").attr("stop-color", "rgba(5,5,10,0)");
+    [["grad-gold", "#D4B86A", "#7A6220"], ["grad-blue", "#4F8EE8", "#1E4A9E"], ["grad-teal", "#1BC4B0", "#0D6B62"],
+     ["grad-green", "#34D06A", "#126E32"], ["grad-purple", "#9B7AED", "#5B32B8"], ["grad-pink", "#F472B6", "#B91C5C"],
+     ["grad-amber", "#E8A82E", "#8A5208"], ["grad-fund", "#8B6AE8", "#3D1D7A"]].forEach(function (gr) {
+      var lg = defs.append("linearGradient").attr("id", gr[0]).attr("x1", "22%").attr("y1", "12%").attr("x2", "88%").attr("y2", "92%");
+      lg.append("stop").attr("offset", "0%").attr("stop-color", gr[1]);
+      lg.append("stop").attr("offset", "100%").attr("stop-color", gr[2]);
+    });
+    gRoot.append("rect").attr("width", width).attr("height", height).attr("fill", "url(#graph-bg-glow)").attr("pointer-events", "none");
+    gRoot.append("rect")
+      .attr("x", 1).attr("y", 1).attr("width", width - 2).attr("height", height - 2)
+      .attr("fill", "none")
+      .attr("stroke", "rgba(201,168,76,0.14)")
+      .attr("stroke-width", 1)
+      .attr("rx", 2)
+      .attr("pointer-events", "none");
+    var simulation = d3.forceSimulation(nodes)
+      .force("link", d3.forceLink(links).id(function (d) { return d.id; }).distance(function (l) {
+        var s = typeof l.source === "object" ? l.source.id : l.source;
+        var t = typeof l.target === "object" ? l.target.id : l.target;
+        var spvLeaf = (s === "spvco" && t !== "holding") || (t === "spvco" && s !== "holding");
+        return spvLeaf ? 88 : 132;
+      }))
+      .force("charge", d3.forceManyBody().strength(-420))
+      .force("center", d3.forceCenter(width / 2, height / 2 + 6))
+      .force("collide", d3.forceCollide().radius(function (d) { return d.r + 8; }))
+      .alphaDecay(0.022)
+      .velocityDecay(0.35);
+    function linkPath(d) {
+      var sx = d.source.x;
+      var sy = d.source.y;
+      var tx = d.target.x;
+      var ty = d.target.y;
+      var dx = tx - sx;
+      var dy = ty - sy;
+      var ox = -dy * 0.06;
+      var oy = dx * 0.06;
+      var c1x = sx + dx * 0.28 + ox;
+      var c1y = sy + dy * 0.28 + oy;
+      var c2x = sx + dx * 0.72 + ox;
+      var c2y = sy + dy * 0.72 + oy;
+      return "M" + sx + "," + sy + " C" + c1x + "," + c1y + " " + c2x + "," + c2y + " " + tx + "," + ty;
+    }
+    var link = gRoot.append("g").attr("class", "graph-links").attr("fill", "none").selectAll("path").data(links).enter().append("path")
+      .attr("stroke", "rgba(200,198,210,0.28)")
+      .attr("stroke-width", function (d) { return d.dashed ? 1.1 : 1.45; })
+      .attr("stroke-dasharray", function (d) { return d.dashed ? "6 4" : "none"; })
+      .attr("stroke-linecap", "round")
+      .attr("stroke-linejoin", "round")
+      .attr("opacity", function (d) { return d.dashed ? 0.38 : 0.26; });
+    var node = gRoot.append("g").attr("class", "graph-nodes").selectAll("g").data(nodes).enter().append("g")
+      .attr("cursor", "grab").call(d3.drag()
+        .on("start", function (event) {
+          if (event.sourceEvent) event.sourceEvent.stopPropagation();
+          dragstarted(event);
+        }).on("drag", dragged).on("end", dragended));
+    node.append("circle")
+      .attr("class", "node-halo")
+      .attr("r", function (d) { return d.r + 5; })
+      .attr("fill", "none")
+      .attr("stroke", "rgba(201,168,76,0)")
+      .attr("stroke-width", 1.5);
+    node.append("circle")
+      .attr("class", "node-circle")
+      .attr("r", function (d) { return d.r; })
+      .attr("fill", function (d) { return d.fill; })
+      .attr("stroke", function (d) {
+        if (d.id === "holding") return "rgba(210,185,115,0.5)";
+        return "rgba(228,226,236,0.2)";
+      })
+      .attr("stroke-width", function (d) { return d.id === "holding" ? 1.5 : 1; });
+    node.filter(function (d) { return d.id === "holding"; }).append("circle")
+      .attr("r", function (d) { return d.r + 11; })
+      .attr("fill", "none")
+      .attr("stroke", "rgba(201,168,76,0.45)")
+      .attr("stroke-width", 1)
+      .attr("class", "pulse-ring");
+    node.append("text")
+      .attr("class", "node-label")
+      .text(function (d) { return d.name.length > 20 ? d.name.slice(0, 18) + "…" : d.name; })
+      .attr("text-anchor", "middle")
+      .attr("dy", "0.35em")
+      .attr("fill", "#F5F2EB")
+      .attr("paint-order", "stroke fill")
+      .attr("stroke", "rgba(8,8,14,0.88)")
+      .attr("stroke-width", "2px")
+      .style("font-size", "11px")
+      .style("font-weight", "400")
+      .style("pointer-events", "none")
+      .style("font-family", '"Times New Roman", Times, serif');
+    var tipEl = d3.select(".orcrist-graph-tip");
+    if (tipEl.empty()) {
+      tipEl = d3.select("body").append("div").attr("class", "orcrist-graph-tip").attr("role", "tooltip");
+    }
+    function linkEnds(l) {
+      var s = typeof l.source === "object" && l.source !== null ? l.source.id : l.source;
+      var t = typeof l.target === "object" && l.target !== null ? l.target.id : l.target;
+      return { s: s, t: t };
+    }
+    function highlightGraph(hoverId) {
+      if (!hoverId) {
+        link.transition().duration(180)
+          .attr("opacity", function (d) { return d.dashed ? 0.38 : 0.26; })
+          .attr("stroke", "rgba(200,198,210,0.28)")
+          .attr("stroke-width", function (d) { return d.dashed ? 1.1 : 1.45; });
+        node.select(".node-circle").transition().duration(180)
+          .attr("r", function (d) { return d.r; })
+          .style("opacity", 1);
+        node.select(".node-halo").transition().duration(180).attr("stroke", "rgba(201,168,76,0)");
+        node.select(".node-label").transition().duration(180).style("opacity", 1);
+        return;
+      }
+      link.transition().duration(200)
+        .attr("opacity", function (d) {
+          var e = linkEnds(d);
+          return (e.s === hoverId || e.t === hoverId) ? 0.98 : 0.07;
+        })
+        .attr("stroke", function (d) {
+          var e = linkEnds(d);
+          return (e.s === hoverId || e.t === hoverId) ? "rgba(201,168,76,0.65)" : "rgba(245,242,235,0.12)";
+        })
+        .attr("stroke-width", function (d) {
+          var e = linkEnds(d);
+          var hit = e.s === hoverId || e.t === hoverId;
+          if (!hit) return d.dashed ? 0.8 : 1;
+          return d.dashed ? 2 : 2.8;
+        });
+      node.each(function (d) {
+        var hit = d.id === hoverId;
+        var conn = links.some(function (l) {
+          var e = linkEnds(l);
+          return (e.s === hoverId && e.t === d.id) || (e.t === hoverId && e.s === d.id);
+        });
+        var lit = hit || conn;
+        d3.select(this).select(".node-circle").transition().duration(200)
+          .attr("r", function (n) { return hit ? n.r * 1.1 : n.r; })
+          .style("opacity", lit ? 1 : 0.38);
+        d3.select(this).select(".node-halo").transition().duration(200)
+          .attr("stroke", lit ? "rgba(201,168,76,0.45)" : "rgba(201,168,76,0)");
+        d3.select(this).select(".node-label").transition().duration(200).style("opacity", lit ? 1 : 0.45);
+      });
+    }
+    node.on("mouseenter", function (event, d) {
+      highlightGraph(d.id);
+      tipEl.classed("visible", true)
+        .html("<div class=\"tip-kicker\">" + d.type + "</div><h3 class=\"tip-title\">" + d.name + "</h3><p class=\"tip-desc\">" + d.desc + "</p>");
+    }).on("mousemove", function (event) {
+      tipEl.style("left", (event.clientX + 18) + "px").style("top", (event.clientY + 18) + "px");
+    }).on("mouseleave", function () {
+      highlightGraph(null);
+      tipEl.classed("visible", false);
+    });
+    simulation.on("tick", function () {
+      link.attr("d", linkPath);
+      node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
+    });
+    function dragstarted(event) {
+      if (!event.active) simulation.alphaTarget(0.35).restart();
+      event.subject.fx = event.subject.x;
+      event.subject.fy = event.subject.y;
+      tipEl.classed("visible", false);
+      highlightGraph(null);
+    }
+    function dragged(event) {
+      event.subject.fx = event.x;
+      event.subject.fy = event.y;
+    }
+    function dragended(event) {
+      if (!event.active) simulation.alphaTarget(0);
+      event.subject.fx = null;
+      event.subject.fy = null;
+    }
+    var zoom = d3.zoom().scaleExtent([0.5, 2.5]).on("zoom", function (ev) {
+      gRoot.attr("transform", ev.transform);
+    });
+    svg.call(zoom);
+    window.__orcristGraphDone = true;
+  }
+  function runGraphWhenReady() {
+    if (window.__orcristGraphDone) return;
+    initGraph();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", runGraphWhenReady);
+  } else {
+    runGraphWhenReady();
+  }
+  window.addEventListener("load", function () {
+    if (!window.__orcristGraphDone) initGraph();
+  });
+
+  /* Hero title reveal - ensure animation runs */
+  document.querySelectorAll(".hero-title").forEach(function (el) {
+    el.style.animation = "none";
+    void el.offsetHeight;
+    el.style.animation = "";
+  });
+})();
+  </script>
+</body>
+</html>
+
