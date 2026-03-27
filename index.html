@@ -43,6 +43,8 @@
     html {
       scroll-behavior: smooth;
       font-family: var(--font-site);
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
     body {
       margin: 0;
@@ -1170,6 +1172,18 @@
       outline: none;
       border-bottom-color: var(--gold);
     }
+    .contact-form-note {
+      margin-top: 1rem;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--ivory2);
+    }
+    .contact-form-note.contact-form-success { color: var(--gold); }
+    .contact-form-note.contact-form-error { color: #f87171; }
+    .contact-form button.btn-solid:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
     .site-footer {
       padding: 2rem;
       border-top: 1px solid var(--border);
@@ -1388,6 +1402,18 @@
     @media (max-width: 1100px) {
       .nav-center { display: none; }
       .nav-toggle { display: block; }
+      header.nav {
+        padding: 1rem 1.25rem;
+        padding-left: max(1.25rem, env(safe-area-inset-left));
+        padding-right: max(1.25rem, env(safe-area-inset-right));
+      }
+      .nav-brand { font-size: clamp(1.05rem, 3.2vw, 1.35rem); }
+      .nav-right {
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        min-width: 0;
+      }
       .verticals-grid { grid-template-columns: repeat(2, 1fr); }
       .about-grid { grid-template-columns: 1fr; }
       .calc-grid { grid-template-columns: 1fr; }
@@ -1406,6 +1432,150 @@
       .pe-metrics { grid-template-columns: 1fr; }
       .site-footer { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
       .site-footer .copy { text-align: center; }
+      header.nav {
+        padding: 0.65rem 0.85rem;
+        padding-left: max(0.85rem, env(safe-area-inset-left));
+        padding-right: max(0.85rem, env(safe-area-inset-right));
+      }
+      .lang-toggle button {
+        padding: 0.4rem 0.55rem;
+        min-width: 2.5rem;
+      }
+      .btn-cta {
+        padding: 0.45rem 0.75rem;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+      }
+      #hero {
+        min-height: 100dvh;
+        padding: max(5.25rem, calc(env(safe-area-inset-top) + 3.5rem)) max(1rem, env(safe-area-inset-left)) 2.5rem max(1rem, env(safe-area-inset-right));
+      }
+      .hero-pre {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.65rem;
+        margin-bottom: 1.5rem;
+        padding: 0 0.25rem;
+        font-size: 9px;
+        letter-spacing: 0.14em;
+      }
+      .hero-pre .line { width: 28px; opacity: 0.45; }
+      .hero-title {
+        font-size: clamp(2rem, 10.5vw, 8.125rem);
+      }
+      .hero-body {
+        font-size: 13px;
+        margin: 1.5rem auto;
+        padding: 0 0.35rem;
+      }
+      .hero-ctas {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .btn-solid,
+      .btn-ghost {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        display: inline-flex;
+        align-items: center;
+        box-sizing: border-box;
+      }
+      .scroll-hint { margin-top: 2.5rem; }
+      section {
+        padding: 3rem max(1rem, env(safe-area-inset-left)) 3rem max(1rem, env(safe-area-inset-right));
+      }
+      .section-tag {
+        letter-spacing: 0.18em;
+        font-size: 9px;
+      }
+      main h2.sh { font-size: clamp(1.4rem, 5.2vw, 2.75rem) !important; }
+      .stat-num {
+        font-size: clamp(30px, 11vw, 58px);
+      }
+      .stat-cell { padding: 1.5rem 0.65rem; }
+      .stat-label {
+        font-size: 9px;
+        letter-spacing: 0.14em;
+      }
+      .quote-box {
+        padding: 1.5rem 1.15rem;
+      }
+      .quote-box .q-top {
+        margin: -1.5rem -1.15rem 1.25rem;
+        width: calc(100% + 2.3rem);
+      }
+      .quote-box p {
+        font-size: clamp(1.05rem, 4.2vw, 1.35rem);
+      }
+      .quote-box::before {
+        font-size: 72px;
+        top: 0.5rem;
+        left: 0.65rem;
+      }
+      .vc { padding: 1.25rem 1rem 1.5rem; }
+      .vc h3 { font-size: clamp(1.1rem, 4vw, 22px); }
+      .graph-box {
+        height: min(400px, 56vh);
+        min-height: 260px;
+      }
+      .graph-crown-toolbar {
+        padding: 0.65rem 0.75rem;
+        gap: 0.5rem;
+      }
+      .graph-legend {
+        padding: 0.85rem 0.75rem 0;
+        gap: 0.65rem 1rem;
+        justify-content: flex-start;
+      }
+      .spv-block,
+      .pe-block { padding: 1.35rem 1rem; }
+      .philosophy-section { padding: 3.5rem 1rem; }
+      .phil-quote {
+        font-size: clamp(1.2rem, 5vw, 2.25rem);
+        margin-bottom: 2rem;
+      }
+      .phil-quote::before { font-size: 100px; }
+      .pillar .ghost-num { font-size: 40px; }
+      .contact-grid { gap: 2.5rem; }
+      .modal-inner {
+        padding: max(3.25rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-left)) 2rem max(1rem, env(safe-area-inset-right));
+      }
+      .modal-close {
+        top: max(0.75rem, env(safe-area-inset-top));
+        right: max(0.75rem, env(safe-area-inset-right));
+      }
+      .modal-body { font-size: 13px; }
+      .modal-title { font-size: clamp(1.5rem, 6vw, 2.75rem); }
+      .float-cta {
+        bottom: max(1rem, env(safe-area-inset-bottom));
+        right: max(0.75rem, env(safe-area-inset-right));
+      }
+      .site-footer {
+        padding: 1.5rem max(1rem, env(safe-area-inset-left)) 1.5rem max(1rem, env(safe-area-inset-right));
+      }
+      .nav-mobile {
+        padding: max(2rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-left)) max(2rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-right));
+      }
+      .nav-mobile-close {
+        top: max(1rem, env(safe-area-inset-top));
+        right: max(1rem, env(safe-area-inset-right));
+      }
+      .ticker span {
+        padding: 0 1.25rem;
+        font-size: 9px;
+      }
+      #loading-gate {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+    }
+    @media (max-width: 400px) {
+      .nav-right .btn-cta { display: none; }
     }
   </style>
 </head>
@@ -1740,18 +1910,23 @@
           </div>
         </div>
         <div class="rr">
-          <!-- Submissions: Formspree dashboard for form id xpzgqjqw → https://formspree.io/forms (log in, same account that owns the form) -->
-          <form class="contact-form" id="contact-form" action="https://formspree.io/f/xpzgqjqw" method="POST">
-            <input type="hidden" name="_subject" value="Orcrist Holding - Website" />
+          <!--
+            Email via Web3Forms (free): https://web3forms.com
+            1. Open the site → enter the inbox where you want messages.
+            2. Copy your Access Key and paste it below (replace YOUR_ACCESS_KEY only).
+          -->
+          <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="d4d18230-23fb-4ae4-bf4e-085b57b08c20" />
             <label for="cf-name" data-en="Full name" data-fr="Nom complet">Full name</label>
-            <input id="cf-name" name="name" type="text" required autocomplete="name" data-placeholder-en="Your name" data-placeholder-fr="Votre nom" placeholder="Your name" />
+            <input id="cf-name" name="name" type="text" required autocomplete="name" maxlength="200" data-placeholder-en="Your name" data-placeholder-fr="Votre nom" placeholder="Your name" />
             <label for="cf-email" data-en="Email" data-fr="Email">Email</label>
-            <input id="cf-email" name="email" type="email" required autocomplete="email" data-placeholder-en="you@company.com" data-placeholder-fr="vous@entreprise.com" placeholder="you@company.com" />
+            <input id="cf-email" name="email" type="email" required autocomplete="email" maxlength="254" inputmode="email" data-placeholder-en="you@company.com" data-placeholder-fr="vous@entreprise.com" placeholder="you@company.com" />
             <label for="cf-sub" data-en="Subject" data-fr="Sujet">Subject</label>
-            <input id="cf-sub" name="subject" type="text" data-placeholder-en="How can we help?" data-placeholder-fr="Comment pouvons-nous aider ?" placeholder="How can we help?" />
+            <input id="cf-sub" name="subject" type="text" required maxlength="200" data-placeholder-en="Brief subject line" data-placeholder-fr="Objet bref" placeholder="Brief subject line" />
             <label for="cf-msg" data-en="Message" data-fr="Message">Message</label>
-            <textarea id="cf-msg" name="message" rows="5" data-placeholder-en="Your message" data-placeholder-fr="Votre message" placeholder="Your message"></textarea>
+            <textarea id="cf-msg" name="message" rows="5" required maxlength="5000" data-placeholder-en="Your message" data-placeholder-fr="Votre message" placeholder="Your message"></textarea>
             <button type="submit" class="btn-solid" data-en="Send message" data-fr="Envoyer">Send message</button>
+            <p class="contact-form-note" id="contact-form-status" role="status" aria-live="polite" hidden></p>
           </form>
         </div>
       </div>
@@ -2240,6 +2415,69 @@
   }
   document.getElementById("lang-en").addEventListener("click", function () { applyLang("en"); });
   document.getElementById("lang-fr").addEventListener("click", function () { applyLang("fr"); });
+
+  /* Contact form → Web3Forms (free): paste access key in the hidden field above */
+  var contactForm = document.getElementById("contact-form");
+  var contactStatus = document.getElementById("contact-form-status");
+  if (contactForm && contactStatus) {
+    contactForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var keyEl = contactForm.querySelector('[name="access_key"]');
+      var key = keyEl ? keyEl.value.trim() : "";
+      var lang = document.documentElement.lang === "fr" ? "fr" : "en";
+      contactStatus.classList.remove("contact-form-success", "contact-form-error");
+      if (!key || key === "YOUR_ACCESS_KEY") {
+        contactStatus.textContent = lang === "fr"
+          ? "Ouvrez index.html et remplacez YOUR_ACCESS_KEY par votre clé sur web3forms.com (voir le commentaire au-dessus du formulaire)."
+          : "Open index.html and replace YOUR_ACCESS_KEY with your key from web3forms.com (see the comment above the form).";
+        contactStatus.classList.add("contact-form-error");
+        contactStatus.hidden = false;
+        return;
+      }
+      var name = contactForm.querySelector('[name="name"]');
+      var email = contactForm.querySelector('[name="email"]');
+      var subject = contactForm.querySelector('[name="subject"]');
+      var message = contactForm.querySelector('[name="message"]');
+      var btn = contactForm.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      contactStatus.hidden = true;
+      fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: key,
+          name: name ? name.value.trim() : "",
+          email: email ? email.value.trim() : "",
+          subject: subject ? subject.value.trim() : "",
+          message: message ? message.value.trim() : ""
+        })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          btn.disabled = false;
+          if (data.success) {
+            contactStatus.textContent = lang === "fr"
+              ? "Message envoyé. Nous vous répondrons bientôt."
+              : "Message sent. We'll get back to you soon.";
+            contactStatus.classList.add("contact-form-success");
+            contactStatus.hidden = false;
+            contactForm.reset();
+          } else {
+            contactStatus.textContent = (data.message) || (lang === "fr" ? "Envoi impossible. Réessayez." : "Could not send. Please try again.");
+            contactStatus.classList.add("contact-form-error");
+            contactStatus.hidden = false;
+          }
+        })
+        .catch(function () {
+          btn.disabled = false;
+          contactStatus.textContent = lang === "fr"
+            ? "Erreur réseau. Réessayez plus tard."
+            : "Network error. Try again later.";
+          contactStatus.classList.add("contact-form-error");
+          contactStatus.hidden = false;
+        });
+    });
+  }
 
   var navToggle = document.getElementById("nav-toggle");
   var navMobile = document.getElementById("nav-mobile");
