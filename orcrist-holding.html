@@ -1172,18 +1172,6 @@
       outline: none;
       border-bottom-color: var(--gold);
     }
-    .contact-form-note {
-      margin-top: 1rem;
-      font-size: 12px;
-      line-height: 1.55;
-      color: var(--ivory2);
-    }
-    .contact-form-note.contact-form-success { color: var(--gold); }
-    .contact-form-note.contact-form-error { color: #f87171; }
-    .contact-form button.btn-solid:disabled {
-      opacity: 0.55;
-      cursor: not-allowed;
-    }
     .site-footer {
       padding: 2rem;
       border-top: 1px solid var(--border);
@@ -1910,23 +1898,18 @@
           </div>
         </div>
         <div class="rr">
-          <!--
-            Email via Web3Forms (free): https://web3forms.com
-            1. Open the site → enter the inbox where you want messages.
-            2. Copy your Access Key and paste it below (replace YOUR_ACCESS_KEY only).
-          -->
-          <form class="contact-form" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
-            <input type="hidden" name="access_key" value="d4d18230-23fb-4ae4-bf4e-085b57b08c20" />
+          <!-- Submissions: Formspree dashboard for form id xpzgqjqw → https://formspree.io/forms (log in, same account that owns the form) -->
+          <form class="contact-form" id="contact-form" action="https://formspree.io/f/xpzgqjqw" method="POST">
+            <input type="hidden" name="_subject" value="Orcrist Holding - Website" />
             <label for="cf-name" data-en="Full name" data-fr="Nom complet">Full name</label>
-            <input id="cf-name" name="name" type="text" required autocomplete="name" maxlength="200" data-placeholder-en="Your name" data-placeholder-fr="Votre nom" placeholder="Your name" />
+            <input id="cf-name" name="name" type="text" required autocomplete="name" data-placeholder-en="Your name" data-placeholder-fr="Votre nom" placeholder="Your name" />
             <label for="cf-email" data-en="Email" data-fr="Email">Email</label>
-            <input id="cf-email" name="email" type="email" required autocomplete="email" maxlength="254" inputmode="email" data-placeholder-en="you@company.com" data-placeholder-fr="vous@entreprise.com" placeholder="you@company.com" />
+            <input id="cf-email" name="email" type="email" required autocomplete="email" data-placeholder-en="you@company.com" data-placeholder-fr="vous@entreprise.com" placeholder="you@company.com" />
             <label for="cf-sub" data-en="Subject" data-fr="Sujet">Subject</label>
-            <input id="cf-sub" name="subject" type="text" required maxlength="200" data-placeholder-en="Brief subject line" data-placeholder-fr="Objet bref" placeholder="Brief subject line" />
+            <input id="cf-sub" name="subject" type="text" data-placeholder-en="How can we help?" data-placeholder-fr="Comment pouvons-nous aider ?" placeholder="How can we help?" />
             <label for="cf-msg" data-en="Message" data-fr="Message">Message</label>
-            <textarea id="cf-msg" name="message" rows="5" required maxlength="5000" data-placeholder-en="Your message" data-placeholder-fr="Votre message" placeholder="Your message"></textarea>
+            <textarea id="cf-msg" name="message" rows="5" data-placeholder-en="Your message" data-placeholder-fr="Votre message" placeholder="Your message"></textarea>
             <button type="submit" class="btn-solid" data-en="Send message" data-fr="Envoyer">Send message</button>
-            <p class="contact-form-note" id="contact-form-status" role="status" aria-live="polite" hidden></p>
           </form>
         </div>
       </div>
@@ -2415,69 +2398,6 @@
   }
   document.getElementById("lang-en").addEventListener("click", function () { applyLang("en"); });
   document.getElementById("lang-fr").addEventListener("click", function () { applyLang("fr"); });
-
-  /* Contact form → Web3Forms (free): paste access key in the hidden field above */
-  var contactForm = document.getElementById("contact-form");
-  var contactStatus = document.getElementById("contact-form-status");
-  if (contactForm && contactStatus) {
-    contactForm.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var keyEl = contactForm.querySelector('[name="access_key"]');
-      var key = keyEl ? keyEl.value.trim() : "";
-      var lang = document.documentElement.lang === "fr" ? "fr" : "en";
-      contactStatus.classList.remove("contact-form-success", "contact-form-error");
-      if (!key || key === "YOUR_ACCESS_KEY") {
-        contactStatus.textContent = lang === "fr"
-          ? "Ouvrez index.html et remplacez YOUR_ACCESS_KEY par votre clé sur web3forms.com (voir le commentaire au-dessus du formulaire)."
-          : "Open index.html and replace YOUR_ACCESS_KEY with your key from web3forms.com (see the comment above the form).";
-        contactStatus.classList.add("contact-form-error");
-        contactStatus.hidden = false;
-        return;
-      }
-      var name = contactForm.querySelector('[name="name"]');
-      var email = contactForm.querySelector('[name="email"]');
-      var subject = contactForm.querySelector('[name="subject"]');
-      var message = contactForm.querySelector('[name="message"]');
-      var btn = contactForm.querySelector('button[type="submit"]');
-      btn.disabled = true;
-      contactStatus.hidden = true;
-      fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          access_key: key,
-          name: name ? name.value.trim() : "",
-          email: email ? email.value.trim() : "",
-          subject: subject ? subject.value.trim() : "",
-          message: message ? message.value.trim() : ""
-        })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          btn.disabled = false;
-          if (data.success) {
-            contactStatus.textContent = lang === "fr"
-              ? "Message envoyé. Nous vous répondrons bientôt."
-              : "Message sent. We'll get back to you soon.";
-            contactStatus.classList.add("contact-form-success");
-            contactStatus.hidden = false;
-            contactForm.reset();
-          } else {
-            contactStatus.textContent = (data.message) || (lang === "fr" ? "Envoi impossible. Réessayez." : "Could not send. Please try again.");
-            contactStatus.classList.add("contact-form-error");
-            contactStatus.hidden = false;
-          }
-        })
-        .catch(function () {
-          btn.disabled = false;
-          contactStatus.textContent = lang === "fr"
-            ? "Erreur réseau. Réessayez plus tard."
-            : "Network error. Try again later.";
-          contactStatus.classList.add("contact-form-error");
-          contactStatus.hidden = false;
-        });
-    });
-  }
 
   var navToggle = document.getElementById("nav-toggle");
   var navMobile = document.getElementById("nav-mobile");
