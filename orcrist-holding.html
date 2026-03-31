@@ -689,9 +689,70 @@
       font-size: 9px;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      padding: 0.35rem 0.6rem;
-      border: 1px solid var(--border);
-      color: var(--ivory3);
+      padding: 0.42rem 0.85rem 0.42rem 1.5rem;
+      border-radius: 999px;
+      border: 1px solid rgba(201, 168, 76, 0.28);
+      background: rgba(201, 168, 76, 0.06);
+      color: rgba(245, 242, 235, 0.92);
+      box-shadow:
+        0 10px 22px rgba(0, 0, 0, 0.28),
+        inset 0 0 0 1px rgba(245, 242, 235, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+    .pill::before {
+      content: "";
+      position: absolute;
+      left: 0.62rem;
+      top: 50%;
+      width: 6px;
+      height: 6px;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow:
+        0 0 0 3px rgba(201, 168, 76, 0.14),
+        0 0 18px rgba(201, 168, 76, 0.2);
+    }
+    .pill[data-en="Active"] {
+      border-color: rgba(34, 197, 94, 0.28);
+      background: rgba(34, 197, 94, 0.06);
+    }
+    .pill[data-en="Active"]::before {
+      background: var(--green);
+      box-shadow:
+        0 0 0 3px rgba(34, 197, 94, 0.14),
+        0 0 18px rgba(34, 197, 94, 0.22);
+    }
+    .pill[data-en="In progress"] {
+      border-color: rgba(245, 158, 11, 0.3);
+      background: rgba(245, 158, 11, 0.07);
+    }
+    .pill[data-en="In progress"]::before {
+      background: var(--spv);
+      box-shadow:
+        0 0 0 3px rgba(245, 158, 11, 0.15),
+        0 0 18px rgba(245, 158, 11, 0.24);
+    }
+    .pill[data-en="Live"] {
+      border-color: rgba(59, 130, 246, 0.3);
+      background: rgba(59, 130, 246, 0.07);
+    }
+    .pill[data-en="Live"]::before {
+      background: var(--blue);
+      box-shadow:
+        0 0 0 3px rgba(59, 130, 246, 0.15),
+        0 0 18px rgba(59, 130, 246, 0.24);
+    }
+    .pill[data-en="Building"] {
+      border-color: rgba(236, 72, 153, 0.28);
+      background: rgba(236, 72, 153, 0.06);
+    }
+    .pill[data-en="Building"]::before {
+      background: var(--pink);
+      box-shadow:
+        0 0 0 3px rgba(236, 72, 153, 0.14),
+        0 0 18px rgba(236, 72, 153, 0.22);
     }
     .vc-hint {
       text-align: center;
@@ -1923,6 +1984,7 @@
         <a href="#structure" data-en="Structure" data-fr="Structure">Structure</a>
         <a href="#invest" data-en="Invest" data-fr="Investir">Invest</a>
         <a href="#contact" data-en="Contact" data-fr="Contact">Contact</a>
+        <a href="#" data-modal="legal" data-en="Disclaimer / Privacy" data-fr="Mentions / Confidentialité">Disclaimer / Privacy</a>
       </nav>
       <div class="copy">© <span id="year-copy">2025</span> Orcrist Holding</div>
     </footer>
@@ -2549,6 +2611,38 @@
   var modalInner = document.getElementById("modal-inner");
 
   function openModal(key) {
+    if (key === "legal") {
+      var lang = document.documentElement.lang === "fr" ? "fr" : "en";
+      modalInner.innerHTML =
+        "<p class=\"modal-tag\">" + (lang === "fr" ? "Informations" : "Information") + "</p>" +
+        "<h2 class=\"modal-title\" style=\"color:var(--gold)\">" + (lang === "fr" ? "Disclaimer · Groupe · Confidentialité" : "Disclaimer · Group · Privacy") + "</h2>" +
+        "<div class=\"modal-div\" style=\"background:var(--gold);opacity:0.35;height:2px\"></div>" +
+        "<p class=\"modal-body\"><b>" + (lang === "fr" ? "À propos du groupe." : "About the group.") + "</b> " + (lang === "fr"
+          ? "Ce site décrit Orcrist Holding et ses filiales / entités affiliées (ensemble, le « Groupe ») et présente, à titre indicatif, certaines activités, verticales et structures. Certaines activités peuvent être exercées par des entités distinctes du Groupe et peuvent être soumises à des conditions, limitations, autorisations ou réglementations selon les juridictions."
+          : "This website describes Orcrist Holding and its affiliates/subsidiaries (together, the “Group”) and provides an indicative overview of certain activities, verticals, and structures. Certain activities may be conducted by separate Group entities and may be subject to conditions, limitations, authorizations, or regulation depending on the jurisdiction.") + "</p>" +
+        "<p class=\"modal-body\" style=\"margin-top:0.85rem\"><b>" + (lang === "fr" ? "Aucun conseil · aucune offre." : "No advice · no offer.") + "</b> " + (lang === "fr"
+          ? "Les informations figurant sur ce site sont fournies à titre informatif uniquement et ne constituent pas un conseil en investissement, juridique, fiscal ou comptable. Rien sur ce site ne constitue (i) une offre de vente, (ii) une sollicitation d'achat, ou (iii) une recommandation relative à des titres, instruments financiers, produits, services ou stratégies. Ce site n’est pas destiné à être diffusé ou utilisé dans une juridiction où une telle diffusion ou utilisation serait contraire à la loi."
+          : "The information on this website is provided for general informational purposes only and does not constitute investment, legal, tax, or accounting advice. Nothing on this website constitutes (i) an offer to sell, (ii) a solicitation of an offer to buy, or (iii) a recommendation relating to any securities, financial instruments, products, services, or investment strategies. This website is not directed to any person in any jurisdiction where such distribution or use would be contrary to applicable law.") + "</p>" +
+        "<p class=\"modal-body\" style=\"margin-top:0.85rem\"><b>" + (lang === "fr" ? "Informations prospectives." : "Forward-looking information.") + "</b> " + (lang === "fr"
+          ? "Toute référence à des performances, objectifs, projections, simulations, exemples chiffrés ou déclarations prospectives est par nature incertaine, repose sur des hypothèses et n’est pas une garantie de résultats futurs. Les contenus présentés peuvent être modifiés, retirés ou mis à jour sans préavis."
+          : "Any reference to performance, targets, projections, simulations, numerical examples, or forward-looking statements is inherently uncertain, based on assumptions, and is not a guarantee of future results. Content may be changed, removed, or updated without notice.") + "</p>" +
+        "<p class=\"modal-body\" style=\"margin-top:0.85rem\"><b>" + (lang === "fr" ? "Confidentialité & propriété intellectuelle." : "Confidentiality & intellectual property.") + "</b> " + (lang === "fr"
+          ? "Les documents ou informations pouvant être communiqués (y compris une présentation / « deck ») sont destinés au destinataire et ne doivent pas être reproduits, redistribués ou cités sans autorisation écrite préalable. La réception de ces éléments n’accorde aucun droit, licence ou engagement de la part du Groupe."
+          : "Any materials that may be shared (including a presentation/deck) are intended for the recipient and should not be reproduced, redistributed, or quoted without prior written consent. Receipt of such materials does not grant any right, license, or commitment by the Group.") + "</p>" +
+        "<p class=\"modal-body\" style=\"margin-top:0.85rem\"><b>" + (lang === "fr" ? "Confidentialité des données (privacy)." : "Privacy.") + "</b> " + (lang === "fr"
+          ? "Si vous nous contactez ou demandez un deck, nous collectons les informations que vous soumettez (par exemple : nom, email, message) afin de répondre à votre demande. Nous ne vendons pas vos données personnelles. Pour demander la suppression, contactez <a href=\"mailto:ceo@orcristholding.com\">ceo@orcristholding.com</a>."
+          : "If you contact us or request a deck, we collect the information you submit (such as name, email, and message) to respond to your request. We do not sell your personal information. To request deletion, contact <a href=\"mailto:ceo@orcristholding.com\">ceo@orcristholding.com</a>.") + "</p>" +
+        "<p class=\"modal-body\" style=\"margin-top:0.85rem\"><b>" + (lang === "fr" ? "Services tiers." : "Third-party services.") + "</b> " + (lang === "fr"
+          ? "Les formulaires de ce site peuvent être traités par des prestataires tiers (par exemple Web3Forms/Formspree) afin de transmettre vos messages. En soumettant un formulaire, vous acceptez cette transmission technique strictement nécessaire au traitement de votre demande."
+          : "Website forms may be processed by third-party service providers (e.g., Web3Forms/Formspree) to deliver your message. By submitting a form, you acknowledge this technical transmission as necessary to process your request.") + "</p>" +
+        "<p class=\"modal-body\" style=\"margin-top:0.85rem\"><b>" + (lang === "fr" ? "Limitation de responsabilité." : "Limitation of liability.") + "</b> " + (lang === "fr"
+          ? "Dans la mesure permise par la loi applicable, le Groupe ne saurait être tenu responsable de toute perte ou dommage résultant de l'utilisation de ce site ou de la confiance accordée à son contenu."
+          : "To the fullest extent permitted by applicable law, the Group shall not be liable for any loss or damage arising from the use of this website or reliance on its content.") + "</p>";
+      modalRoot.classList.add("open");
+      modalRoot.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      return;
+    }
     var m = MOD[key];
     if (!m) return;
     var statsHtml = m.stats.map(function (s) {
