@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Orcrist Holding square">
+  <defs>
+    <style>
+      .serif { font-family: "Cinzel", "Times New Roman", Times, serif; font-weight: 400; }
+      .word { letter-spacing: 0.32em; }
+      .sub  { letter-spacing: 0.62em; }
+    </style>
+  </defs>
+  <rect width="1024" height="1024" fill="#05050A"/>
+  <text x="50%" y="42%" text-anchor="middle" dominant-baseline="middle" class="serif word" font-size="130" fill="#F5F2EB">
+    ORCRIST
+  </text>
+  <circle cx="760" cy="452" r="9" fill="#C9A84C" />
+  <text x="50%" y="54.5%" text-anchor="middle" dominant-baseline="middle" class="serif sub" font-size="46" fill="rgba(245, 242, 235, 0.78)">
+    HOLDING
+  </text>
+  <rect x="250" y="610" width="524" height="2" fill="rgba(201, 168, 76, 0.45)"/>
+</svg>

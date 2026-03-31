@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Orcrist (Group) square">
+  <defs>
+    <style>
+      .w { font-family: "Cinzel", "Times New Roman", Times, serif; font-weight: 400; letter-spacing: 0.34em; }
+    </style>
+  </defs>
+  <rect width="1024" height="1024" fill="#05050A"/>
+  <!-- Centered wordmark to survive square thumbnail crops -->
+  <text x="50%" y="48%" text-anchor="middle" dominant-baseline="middle" class="w" font-size="130" fill="#F5F2EB">
+    ORCRIST
+  </text>
+  <circle cx="760" cy="492" r="9" fill="#C9A84C" />
+</svg>
