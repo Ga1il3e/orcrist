@@ -463,11 +463,12 @@
     .hero-title-wrap {
       overflow: hidden;
       margin-bottom: 0.5rem;
+      padding-bottom: 0.12em;
     }
     .hero-title {
       font-family: var(--font-site);
       font-size: clamp(3.75rem, 12vw, 8.125rem);
-      line-height: 0.95;
+      line-height: 1.02;
       margin: 0;
       transform: translateY(100%);
       animation: heroLine 1s var(--ease-out) forwards;
@@ -1621,7 +1622,7 @@
       <div class="hero-title-wrap"><h1 class="hero-title l1 magnetic-text" data-magnetic-strength="1.7" data-en="Building" data-fr="Construire">Building</h1></div>
       <div class="hero-title-wrap"><h1 class="hero-title l2 magnetic-text" data-magnetic-strength="1.7" data-en="Lasting Value" data-fr="Une valeur durable">Lasting Value</h1></div>
       <div class="hero-title-wrap"><h1 class="hero-title l3 magnetic-text" data-magnetic-strength="1.7" data-en="Across Industries" data-fr="À travers les industries">Across Industries</h1></div>
-      <p class="hero-body" data-en="Orcrist Holding SAS is a Paris-based parent company that coordinates capital, advisory, and operating ventures across finance, real estate, technology, fashion, and administrative services - with a disciplined institutional approach." data-fr="Orcrist Holding SAS est une société mère parisienne qui coordonne capital, conseil et filiales opérationnelles dans la finance, l'immobilier, la technologie, la mode et les services administratifs - avec une approche institutionnelle disciplinée.">Orcrist Holding SAS is a Paris-based parent company that coordinates capital, advisory, and operating ventures across finance, real estate, technology, fashion, and administrative services - with a disciplined institutional approach.</p>
+      <p class="hero-body" data-en="Orcrist Holding is a Paris-based parent company that coordinates capital, advisory, and operating ventures across finance, real estate, technology, fashion, and administrative services - with a disciplined institutional approach." data-fr="Orcrist Holding est une société mère parisienne qui coordonne capital, conseil et filiales opérationnelles dans la finance, l'immobilier, la technologie, la mode et les services administratifs - avec une approche institutionnelle disciplinée.">Orcrist Holding is a Paris-based parent company that coordinates capital, advisory, and operating ventures across finance, real estate, technology, fashion, and administrative services - with a disciplined institutional approach.</p>
       <div class="hero-ctas">
         <a href="#verticals" class="btn-solid" data-en="Our verticals" data-fr="Nos filiales">Our verticals</a>
         <a href="#invest" class="btn-ghost" data-en="Investment arm" data-fr="Branche investissement">Investment arm</a>
@@ -1893,8 +1894,7 @@
           <h2 class="sh magnetic-text" style="font-size:clamp(2rem,4vw,2.75rem)" data-en="Let's build together." data-fr="Construisons ensemble.">Let's build together.</h2>
           <div class="contact-info">
             <p><strong data-en="Headquarters" data-fr="Siège">Headquarters</strong><br />Paris, France</p>
-            <p><strong data-en="General" data-fr="Général">General</strong><br /><a href="mailto:contact@orcristholding.com">contact@orcristholding.com</a></p>
-            <p><strong data-en="Invest" data-fr="Investissement">Invest</strong><br /><a href="mailto:invest@orcristholding.com">invest@orcristholding.com</a></p>
+            <p><strong data-en="Email" data-fr="Email">Email</strong><br /><a href="mailto:ceo@orcristholding.com">ceo@orcristholding.com</a></p>
           </div>
         </div>
         <div class="rr">
@@ -1924,7 +1924,7 @@
         <a href="#invest" data-en="Invest" data-fr="Investir">Invest</a>
         <a href="#contact" data-en="Contact" data-fr="Contact">Contact</a>
       </nav>
-      <div class="copy">© <span id="year-copy">2025</span> Orcrist Holding SAS</div>
+      <div class="copy">© <span id="year-copy">2025</span> Orcrist Holding</div>
     </footer>
   </main>
 
@@ -2474,7 +2474,7 @@
         { k: "Status", v: "Active" },
         { k: "Scale path", v: "AUM &amp; fund closes" },
         { k: "Risk", v: "Markets &amp; liquidity" },
-        { k: "Contact", v: "invest@orcristholding.com" }
+        { k: "Contact", v: "ceo@orcristholding.com" }
       ],
       cta: "#calc",
       ctaLabel: "Model LP returns"
@@ -2490,7 +2490,7 @@
         { k: "Status", v: "Active" },
         { k: "Focus", v: "Compliance &amp; growth" },
         { k: "Delivery", v: "Operator-led" },
-        { k: "Contact", v: "contact@orcristholding.com" }
+        { k: "Contact", v: "ceo@orcristholding.com" }
       ],
       cta: "#contact",
       ctaLabel: "Book a conversation"
@@ -2506,7 +2506,7 @@
         { k: "Status", v: "In progress" },
         { k: "Vehicles", v: "SCI / SPV" },
         { k: "Horizon", v: "Long hold" },
-        { k: "Contact", v: "contact@orcristholding.com" }
+        { k: "Contact", v: "ceo@orcristholding.com" }
       ],
       cta: "#structure",
       ctaLabel: "See SPV layer"
@@ -2522,7 +2522,7 @@
         { k: "Status", v: "Live" },
         { k: "Segments", v: "Hospitality &amp; AI" },
         { k: "Delivery", v: "Sprint + scale" },
-        { k: "Contact", v: "contact@orcristholding.com" }
+        { k: "Contact", v: "ceo@orcristholding.com" }
       ],
       cta: "#contact",
       ctaLabel: "Discuss a project"
@@ -2538,7 +2538,7 @@
         { k: "Status", v: "Building" },
         { k: "Model", v: "Brand + incubator" },
         { k: "Horizon", v: "Seasonal" },
-        { k: "Contact", v: "contact@orcristholding.com" }
+        { k: "Contact", v: "ceo@orcristholding.com" }
       ],
       cta: "#contact",
       ctaLabel: "Partner with Maison"
@@ -2739,18 +2739,78 @@
   var deckPanel = document.getElementById("deck-panel");
   var deckSend = document.getElementById("deck-send");
   var deckMsg = document.getElementById("deck-msg");
+  function deckLang() {
+    return document.documentElement.lang === "fr" ? "fr" : "en";
+  }
+  function showDeckMsg(type, text) {
+    if (!deckMsg) return;
+    deckMsg.style.display = "block";
+    deckMsg.style.color = type === "error" ? "#f87171" : "var(--gold)";
+    deckMsg.textContent = text;
+  }
+  function closeDeckPanelSoon(delayMs) {
+    setTimeout(function () {
+      if (deckMsg) deckMsg.style.display = "none";
+      if (deckPanel) deckPanel.classList.remove("open");
+      var deckEmailEl = document.getElementById("deck-email");
+      if (deckEmailEl) deckEmailEl.value = "";
+      if (deckToggle) deckToggle.setAttribute("aria-expanded", "false");
+    }, delayMs);
+  }
   deckToggle.addEventListener("click", function () {
     var open = deckPanel.classList.toggle("open");
     deckToggle.setAttribute("aria-expanded", open ? "true" : "false");
   });
   deckSend.addEventListener("click", function () {
-    deckMsg.style.display = "block";
-    setTimeout(function () {
-      deckMsg.style.display = "none";
-      deckPanel.classList.remove("open");
-      document.getElementById("deck-email").value = "";
-      deckToggle.setAttribute("aria-expanded", "false");
-    }, 3000);
+    var lang = deckLang();
+    var deckEmailEl = document.getElementById("deck-email");
+    var deckEmail = deckEmailEl ? deckEmailEl.value.trim() : "";
+    if (!deckEmailEl || !deckEmailEl.checkValidity() || !deckEmail) {
+      showDeckMsg("error", lang === "fr" ? "Veuillez entrer un email valide." : "Please enter a valid email.");
+      if (deckEmailEl) deckEmailEl.focus();
+      return;
+    }
+
+    var form = document.getElementById("contact-form");
+    if (!form || !form.action) {
+      showDeckMsg("error", lang === "fr"
+        ? "Formulaire de contact introuvable. Merci d'envoyer un email à ceo@orcristholding.com."
+        : "Contact form not found. Please email ceo@orcristholding.com.");
+      closeDeckPanelSoon(4000);
+      return;
+    }
+
+    deckSend.disabled = true;
+    showDeckMsg("success", lang === "fr" ? "Demande envoyée…" : "Request sent…");
+    var fd = new FormData();
+    fd.append("name", "Deck request");
+    fd.append("email", deckEmail);
+    fd.append("subject", lang === "fr" ? "Demande de deck" : "Request deck");
+    fd.append("message", (lang === "fr"
+      ? "Demande de deck. Merci d'envoyer la présentation à : "
+      : "Deck request. Please send the deck to: ") + deckEmail);
+    fd.append("_subject", "Orcrist Holding - Deck request");
+
+    fetch(form.action, {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: fd
+    })
+      .then(function (r) { return r.json().catch(function () { return { ok: r.ok }; }); })
+      .then(function (data) {
+        deckSend.disabled = false;
+        var ok = (data && (data.ok || data.success)) ? true : false;
+        if (ok) {
+          showDeckMsg("success", lang === "fr" ? "Demande envoyée. Nous revenons vers vous bientôt." : "Request sent. We'll get back to you soon.");
+          closeDeckPanelSoon(3200);
+        } else {
+          showDeckMsg("error", lang === "fr" ? "Envoi impossible. Réessayez." : "Could not send. Please try again.");
+        }
+      })
+      .catch(function () {
+        deckSend.disabled = false;
+        showDeckMsg("error", lang === "fr" ? "Erreur réseau. Réessayez plus tard." : "Network error. Try again later.");
+      });
   });
 
   /* D3 graph */
